@@ -70,11 +70,12 @@ select{height:38px;cursor:pointer;appearance:none;background-image:url("data:ima
 <div class="wrap">
 
 <div class="hdr">
-  <h1>廣告文案創意翻譯工具</h1>
-  <p>填寫以下欄位，工具將自動生成三個英文廣告版本供您選擇，並可匯出結果</p>
+  <h1>廣告文案創意翻譯工具 <span style="font-size:14px;font-weight:400;color:#888">Advertising Transcreation Tool</span></h1>
+  <p>填寫以下欄位，系統將自動組裝提示詞，供您複製後貼入 ChatGPT 或 Claude.ai，生成三個英文廣告版本。</p>
+  <p style="color:#aaa;margin-top:4px;font-size:12px">Complete the fields below. The tool assembles a structured prompt for you to paste into ChatGPT or Claude.ai to generate three English advertising versions.</p>
 </div>
 
-<div class="slbl">填寫資料</div>
+<div class="slbl">Stage 1 — 填寫資料 Input Fields</div>
 
 <div class="fb">
   <div class="flbl">原始文案 <span class="fen">Source text</span></div>
@@ -156,15 +157,15 @@ select{height:38px;cursor:pointer;appearance:none;background-image:url("data:ima
 <hr class="divider">
 
 <div class="cklist">
-  <div class="ckttl">填寫確認清單</div>
-  <div class="ckrow"><div class="dot" id="d1"></div><span>原始文案已填寫</span></div>
-  <div class="ckrow"><div class="dot" id="d2"></div><span>目標市場已選擇</span></div>
-  <div class="ckrow"><div class="dot" id="d3"></div><span>品牌語調已選擇</span></div>
-  <div class="ckrow"><div class="dot" id="d4"></div><span>目標受眾已填寫</span></div>
-  <div class="ckrow"><div class="dot" id="d5"></div><span>核心訊息已填寫</span></div>
+  <div class="ckttl">填寫確認清單 Input Checklist</div>
+  <div class="ckrow"><div class="dot" id="d1"></div><span>原始文案已填寫 Source text entered</span></div>
+  <div class="ckrow"><div class="dot" id="d2"></div><span>目標市場已選擇 Target market selected</span></div>
+  <div class="ckrow"><div class="dot" id="d3"></div><span>品牌語調已選擇 Brand tone selected</span></div>
+  <div class="ckrow"><div class="dot" id="d4"></div><span>目標受眾已填寫 Audience profile completed</span></div>
+  <div class="ckrow"><div class="dot" id="d5"></div><span>核心訊息已填寫 Key message entered</span></div>
 </div>
 
-<button class="genbtn" id="genBtn" onclick="generate()">生成三個廣告版本</button>
+<button class="genbtn" id="genBtn" onclick="generate()">組裝提示詞 Assemble Prompt</button>
 
 <div id="out"></div>
 
@@ -216,26 +217,42 @@ function buildPrompt(d){
 async function generate(){
   _data=getData();
   _prompt=buildPrompt(_data);
-  _versions=[];_chosen=-1;
   _ts=new Date().toLocaleString('zh-TW');
   var out=document.getElementById('out');
   var btn=document.getElementById('genBtn');
   btn.disabled=true;
-  var promptDisplay='<div style="margin-top:1.75rem"><hr class="divider"><div class="slbl">Stage 2 — 系統自動組裝的完整提示詞 Assembled Prompt</div><div style="background:#faf9f7;border:1px solid #e4e2dc;border-radius:10px;padding:1rem 1.25rem;margin-bottom:1.75rem"><div style="font-size:11px;font-weight:600;color:#aaa;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">根據您填寫的資料，系統自動產生以下提示詞，作為給 AI 的完整指令</div><div style="font-family:monospace;font-size:12px;color:#444;white-space:pre-wrap;line-height:1.65;background:#fff;border:1px solid #e4e2dc;border-radius:8px;padding:12px;max-height:280px;overflow-y:auto">'+_prompt.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</div></div><div class="slbl">Stage 3 — AI 生成廣告版本</div><div class="loading"><span class="spinner"></span>AI 生成中，請稍候⋯⋯</div></div>';
-  out.innerHTML=promptDisplay;
-  try{
-    var res=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','anthropic-beta':'claude-ai-integration-2025-03-05'},
-      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2400,messages:[{role:'user',content:_prompt}]})
-    });
-    var j=await res.json();
-    var txt=j.content&&j.content.map(function(b){return b.text||''}).join('')||'';
-    if(!txt)throw new Error('empty');
-    renderVersions(txt,out);
-  }catch(e){
-    out.querySelector('.loading').innerHTML='<div class="errmsg">生成失敗，請稍後再試，或聯絡研究人員。</div>';
-  }
+
+  var safePrompt=_prompt.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+  out.innerHTML='<div style="margin-top:1.75rem">'
+    +'<hr class="divider">'
+    +'<div class="slbl">Stage 2 — 系統自動組裝的完整提示詞 Assembled Prompt</div>'
+    +'<div style="background:#faf9f7;border:1px solid #e4e2dc;border-radius:10px;padding:1rem 1.25rem;margin-bottom:1.5rem">'
+    +'<div style="font-size:12px;color:#666;margin-bottom:8px">根據您填寫的資料，系統已自動產生以下完整提示詞。<br><span style="color:#aaa">The tool has assembled the following structured prompt based on your inputs.</span></div>'
+    +'<div id="promptBox" style="font-family:monospace;font-size:12px;color:#444;white-space:pre-wrap;line-height:1.65;background:#fff;border:1px solid #e4e2dc;border-radius:8px;padding:12px;max-height:280px;overflow-y:auto">'+safePrompt+'</div>'
+    +'<button onclick="cpyPrompt()" id="cpyBtn" style="margin-top:10px;padding:9px 18px;font-size:13px;font-weight:600;color:#fff;background:#2a2a2a;border:none;border-radius:8px;cursor:pointer">複製提示詞 Copy Prompt</button>'
+    +'</div>'
+    +'<div style="background:#f0f7ff;border:1px solid #c8dff5;border-radius:10px;padding:1rem 1.25rem;margin-bottom:1.5rem">'
+    +'<div style="font-size:13px;font-weight:600;color:#1a4a7a;margin-bottom:8px">下一步 Next Step</div>'
+    +'<div style="font-size:13px;color:#2a5a9a;line-height:1.8">'
+    +'1. 點擊上方「複製提示詞」按鈕 <span style="color:#7a9ac0">Click "Copy Prompt" above</span><br>'
+    +'2. 開啟 <strong>ChatGPT</strong>（chatgpt.com）或 <strong>Claude.ai</strong>，貼上提示詞並送出 <span style="color:#7a9ac0">Open ChatGPT or Claude.ai, paste and send</span><br>'
+    +'3. AI 將生成三個英文廣告版本，請選擇您偏好的版本 <span style="color:#7a9ac0">AI will generate three versions — select your preferred one</span><br>'
+    +'4. 回到本頁面，在下方記錄您的選擇並匯出結果 <span style="color:#7a9ac0">Return here to record your choice and export the result</span>'
+    +'</div>'
+    +'</div>'
+    +'<hr class="divider">'
+    +'<div class="slbl">Stage 3 — 記錄選擇結果 Record Your Selection</div>'
+    +'<div style="font-size:13px;color:#666;margin-bottom:14px">將 AI 生成的結果貼回後，請選擇您最偏好的版本編號，並匯出紀錄。<br><span style="color:#aaa">After reviewing the AI output, select the version number you preferred and export your record.</span></div>'
+    +'<div style="display:flex;gap:10px;margin-bottom:1rem">'
+    +'<button class="selbtn" id="sb0" onclick="choose(0)">版本 1 Version 1</button>'
+    +'<button class="selbtn" id="sb1" onclick="choose(1)">版本 2 Version 2</button>'
+    +'<button class="selbtn" id="sb2" onclick="choose(2)">版本 3 Version 3</button>'
+    +'</div>'
+    +'<div id="chosenNotice"></div>'
+    +'<button class="expbtn" id="expBtn" disabled onclick="exportFile()">匯出選擇結果 Export Result (.txt)</button>'
+    +'</div>';
+
   btn.disabled=false;
 }
 
@@ -277,53 +294,55 @@ function renderVersions(txt,out){
   out.insertAdjacentHTML('beforeend','<button class="expbtn" id="expBtn" disabled onclick="exportFile()">匯出我的選擇結果（.txt）</button><div id="chosenNotice"></div>');
 }
 
+function cpyPrompt(){
+  if(!_prompt)return;
+  navigator.clipboard.writeText(_prompt).then(function(){
+    var b=document.getElementById('cpyBtn');
+    if(b){b.textContent='已複製！Copied!';setTimeout(function(){b.textContent='複製提示詞 Copy Prompt'},2000);}
+  });
+}
+
 function choose(i){
   _chosen=i;
   for(var k=0;k<3;k++){
     var sb=document.getElementById('sb'+k);
     if(!sb)continue;
-    if(k===i){sb.textContent='✓ 已選擇此版本';sb.classList.add('chosen');}
-    else{sb.textContent='選擇此版本';sb.classList.remove('chosen');}
+    if(k===i){sb.textContent='✓ 已選擇 版本'+(i+1)+' Version '+(i+1);sb.classList.add('chosen');}
+    else{
+      var labels=['版本 1 Version 1','版本 2 Version 2','版本 3 Version 3'];
+      sb.textContent=labels[k];sb.classList.remove('chosen');
+    }
   }
   var eb=document.getElementById('expBtn');
   if(eb)eb.disabled=false;
   var notice=document.getElementById('chosenNotice');
-  if(notice)notice.innerHTML='<div class="chosen-notice">您已選擇版本 '+(i+1)+'。請點擊上方按鈕匯出結果，並將檔案傳送給研究人員。</div>';
+  if(notice)notice.innerHTML='<div class="chosen-notice" style="margin-bottom:12px">已選擇版本 '+(i+1)+'。請點擊下方按鈕匯出結果，並將檔案傳送給研究人員。<br><span style="font-weight:400;font-size:12px">Version '+(i+1)+' selected. Click below to export and send the file to the researcher.</span></div>';
 }
 
 function exportFile(){
   if(_chosen<0)return;
-  var v=_versions[_chosen];var d=_data;
+  var d=_data;
   var lines=[];
-  lines.push('=== 廣告文案創意翻譯工具 — 實驗記錄 ===');
-  lines.push('記錄時間：'+_ts);
+  lines.push('=== 廣告文案創意翻譯工具 — 實驗記錄 Transcreation Tool — Research Record ===');
+  lines.push('記錄時間 Timestamp：'+_ts);
   lines.push('');
-  lines.push('【填寫資料】');
-  lines.push('原始文案：'+d.src);
-  lines.push('目標市場：'+d.mkt);
-  lines.push('品牌語調：'+d.tones.join('、'));
-  lines.push('需避免語調：'+(d.avoids.length?d.avoids.join('、'):'無'));
-  lines.push('目標受眾年齡層：'+d.audAge);
-  lines.push('英語理解程度：'+d.audLang);
-  lines.push('核心價值觀：'+(d.audVal||'未填'));
-  lines.push('文化融入元素：'+(d.cultIn||'未填'));
-  lines.push('文化禁忌：'+(d.cultAv||'未填'));
-  lines.push('文化語域：'+(d.cultReg||'未選'));
-  lines.push('核心訊息：'+d.key);
+  lines.push('【Stage 1 填寫資料 Input Data】');
+  lines.push('原始文案 Source text：'+d.src);
+  lines.push('目標市場 Target market：'+d.mkt);
+  lines.push('品牌語調 Brand tone：'+d.tones.join('、'));
+  lines.push('需避免語調 Tones to avoid：'+(d.avoids.length?d.avoids.join('、'):'無 None'));
+  lines.push('目標受眾年齡層 Audience：'+d.audAge);
+  lines.push('英語理解程度 Language level：'+d.audLang);
+  lines.push('核心價值觀 Values：'+(d.audVal||'未填 Not provided'));
+  lines.push('文化融入元素 Cultural elements：'+(d.cultIn||'未填 Not provided'));
+  lines.push('文化禁忌 Cultural taboos：'+(d.cultAv||'未填 Not provided'));
+  lines.push('文化語域 Cultural register：'+(d.cultReg||'未選 Not selected'));
+  lines.push('核心訊息 Key message：'+d.key);
   lines.push('');
-  lines.push('【選擇結果】');
-  lines.push('選擇版本：版本 '+(_chosen+1)+' — '+v.strategy);
+  lines.push('【Stage 3 選擇結果 Version Selected】');
+  lines.push('選擇版本 Selected version：版本 '+(_chosen+1)+' Version '+(_chosen+1));
   lines.push('');
-  lines.push('英文版本：');
-  lines.push(v.en);
-  lines.push('');
-  lines.push('中文對照：');
-  lines.push(v.zh);
-  lines.push('');
-  lines.push('創意說明：');
-  lines.push(v.expl);
-  lines.push('');
-  lines.push('【系統自動組裝的完整提示詞 Stage 2 Prompt】');
+  lines.push('【Stage 2 系統組裝提示詞 Assembled Prompt】');
   lines.push(_prompt);
   var blob=new Blob([lines.join('\n')],{type:'text/plain;charset=utf-8'});
   var url=URL.createObjectURL(blob);
