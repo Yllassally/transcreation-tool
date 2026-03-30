@@ -621,26 +621,23 @@
           <strong>Instructions:</strong> Paste each AI-generated version below, select your preferred version, add your reason, then export the session record.
         </div>
 
-        <div class="section-title">貼入 AI 生成結果 Paste AI-Generated Versions</div>
+        <div class="section-title">貼入 AI 生成結果 Paste AI-Generated Output</div>
         <div class="info-box" style="margin-bottom:16px;font-size:12px;">
-          請將 AI 生成的完整內容（含 FULL ANALYSIS）貼入下方欄位。工具會自動擷取文案摘要顯示於介面，完整分析將保存於匯出記錄中。<br>
-          Paste the complete AI output (including FULL ANALYSIS). The tool will display only the copy and summaries; the full analysis is saved in the export record.
+          請將 ChatGPT 生成的完整內容（三個版本）一次貼入下方。工具會自動解析，介面只顯示文案摘要，完整分析保存於匯出記錄。<br>
+          Paste the complete ChatGPT output (all three versions) at once. The tool will parse automatically — only summaries are shown on screen; full analysis is saved in the export record.
         </div>
 
         <div class="version-paste-area">
-          <label>Version 1 — 貼入完整內容 Paste full output</label>
-          <textarea id="v1-output" rows="5" placeholder="將 AI 生成的 Version 1 完整內容貼入此處（文案 + English summary + Chinese summary + FULL ANALYSIS）" oninput="parseVersion(1)"></textarea>
-          <div class="parsed-preview" id="v1-preview" style="display:none;"></div>
+          <label>貼入全部 AI 輸出 Paste Complete AI Output</label>
+          <textarea id="all-output" rows="12" placeholder="將 ChatGPT 生成的三個版本完整內容一次貼入此處..." oninput="parseAllVersions()"></textarea>
         </div>
-        <div class="version-paste-area">
-          <label>Version 2 — 貼入完整內容 Paste full output</label>
-          <textarea id="v2-output" rows="5" placeholder="將 AI 生成的 Version 2 完整內容貼入此處" oninput="parseVersion(2)"></textarea>
-          <div class="parsed-preview" id="v2-preview" style="display:none;"></div>
-        </div>
-        <div class="version-paste-area">
-          <label>Version 3 — 貼入完整內容 Paste full output</label>
-          <textarea id="v3-output" rows="5" placeholder="將 AI 生成的 Version 3 完整內容貼入此處" oninput="parseVersion(3)"></textarea>
-          <div class="parsed-preview" id="v3-preview" style="display:none;"></div>
+
+        <div id="parsed-results" style="display:none;">
+          <hr class="divider">
+          <div class="section-title">解析結果 Parsed Versions</div>
+          <div class="parsed-preview" id="v1-preview" style="margin-bottom:12px;"></div>
+          <div class="parsed-preview" id="v2-preview" style="margin-bottom:12px;"></div>
+          <div class="parsed-preview" id="v3-preview"></div>
         </div>
 
         <hr class="divider">
@@ -840,43 +837,76 @@ function copyPrompt() {
   setTimeout(function() { s.style.display = 'none'; }, 2500);
 }
 
-function parseVersion(n) {
-  var raw = document.getElementById('v' + n + '-output').value.trim();
-  var preview = document.getElementById('v' + n + '-preview');
+var parsedVersions = { 1: null, 2: null, 3: null };
 
+function parseAllVersions() {
+  var raw = document.getElementById('all-output').value.trim();
   if (!raw) {
-    preview.style.display = 'none';
+    document.getElementById('parsed-results').style.display = 'none';
+    parsedVersions = { 1: null, 2: null, 3: null };
     updateExportSummary();
     return;
   }
 
-  // Split at FULL ANALYSIS
-  var splitIdx = raw.indexOf('FULL ANALYSIS:');
-  var displayPart = splitIdx > -1 ? raw.substring(0, splitIdx).trim() : raw;
+  // Split by Version headers
+  var versionBlocks = [null, null, null];
+  var pattern = /\*?\*?Version\s*(\d+):?\*?\*?/gi;
+  var matches = [];
+  var m;
+  while ((m = pattern.exec(raw)) !== null) {
+    matches.push({ idx: m.index, num: parseInt(m[1]) });
+  }
 
-  // Extract English summary
-  var enMatch = displayPart.match(/English summary:\s*(.+)/i);
-  var enSummary = enMatch ? enMatch[1].trim() : '';
+  for (var i = 0; i < matches.length; i++) {
+    var start = matches[i].idx;
+    var end = i + 1 < matches.length ? matches[i+1].idx : raw.length;
+    var block = raw.substring(start, end).trim();
+    var vNum = matches[i].num;
+    if (vNum >= 1 && vNum <= 3) {
+      versionBlocks[vNum - 1] = block;
+    }
+  }
 
-  // Extract Chinese summary
-  var zhMatch = displayPart.match(/Chinese summary:\s*(.+)/i);
-  var zhSummary = zhMatch ? zhMatch[1].trim() : '';
+  for (var v = 1; v <= 3; v++) {
+    var block = versionBlocks[v-1];
+    if (!block) {
+      parsedVersions[v] = null;
+      document.getElementById('v' + v + '-preview').innerHTML = '';
+      continue;
+    }
 
-  // Extract copy (everything before English summary)
-  var copyEnd = displayPart.search(/English summary:/i);
-  var copyText = copyEnd > -1 ? displayPart.substring(0, copyEnd).trim() : displayPart;
-  // Remove version label if present
-  copyText = copyText.replace(/^\*?\*?Version\s*\d+:?\*?\*?\s*/i, '').trim();
+    // Split at FULL ANALYSIS
+    var splitIdx = block.indexOf('FULL ANALYSIS:');
+    var displayPart = splitIdx > -1 ? block.substring(0, splitIdx).trim() : block;
+    var fullAnalysis = splitIdx > -1 ? block.substring(splitIdx).trim() : '';
 
-  // Build preview HTML
-  var html = '';
-  if (copyText) html += '<div class="copy-text">' + escapeHtml(copyText) + '</div>';
-  if (enSummary) html += '<div class="summary-en">🔹 ' + escapeHtml(enSummary) + '</div>';
-  if (zhSummary) html += '<div class="summary-zh">🔸 ' + escapeHtml(zhSummary) + '</div>';
-  if (splitIdx > -1) html += '<div class="hidden-note">✦ FULL ANALYSIS 已隱藏，將包含於匯出記錄 / Hidden from display, included in export</div>';
+    // Extract English summary
+    var enMatch = displayPart.match(/English summary:\s*(.+)/i);
+    var enSummary = enMatch ? enMatch[1].trim() : '';
 
-  preview.innerHTML = html;
-  preview.style.display = html ? 'block' : 'none';
+    // Extract Chinese summary
+    var zhMatch = displayPart.match(/Chinese summary:\s*(.+)/i);
+    var zhSummary = zhMatch ? zhMatch[1].trim() : '';
+
+    // Extract copy
+    var copyEnd = displayPart.search(/English summary:/i);
+    var copyText = copyEnd > -1 ? displayPart.substring(0, copyEnd).trim() : displayPart;
+    copyText = copyText.replace(/^\*?\*?Version\s*\d+:?\*?\*?\s*/i, '').trim();
+
+    parsedVersions[v] = { copy: copyText, enSummary: enSummary, zhSummary: zhSummary, fullAnalysis: fullAnalysis, raw: block };
+
+    // Build preview
+    var html = '<strong style="font-size:12px;color:var(--gray);text-transform:uppercase;letter-spacing:0.05em;">Version ' + v + '</strong><br><br>';
+    if (copyText) html += '<div class="copy-text">' + escapeHtml(copyText) + '</div>';
+    if (enSummary) html += '<div class="summary-en">🔹 ' + escapeHtml(enSummary) + '</div>';
+    if (zhSummary) html += '<div class="summary-zh">🔸 ' + escapeHtml(zhSummary) + '</div>';
+    if (fullAnalysis) html += '<div class="hidden-note">✦ FULL ANALYSIS 已隱藏，將包含於匯出記錄 / Saved in export only</div>';
+
+    document.getElementById('v' + v + '-preview').innerHTML = html;
+  }
+
+  var anyParsed = parsedVersions[1] || parsedVersions[2] || parsedVersions[3];
+  document.getElementById('parsed-results').style.display = anyParsed ? 'block' : 'none';
   updateExportSummary();
 }
 
@@ -893,22 +923,16 @@ function selectVersion(n) {
 }
 
 function updateExportSummary() {
-  var count = ['v1-output','v2-output','v3-output'].filter(function(id) {
-    return document.getElementById(id).value.trim().length > 0;
-  }).length;
+  var count = [1,2,3].filter(function(v) { return parsedVersions[v] !== null; }).length;
   var selText = selectedVersion ? 'Version ' + selectedVersion + ' 已選擇' : '尚未選擇版本';
   document.getElementById('export-summary-text').textContent =
-    '已貼入 ' + count + '/3 個版本 · ' + selText;
+    '已解析 ' + count + '/3 個版本 · ' + selText;
 }
 
 function exportRecord() {
-  var v1 = document.getElementById('v1-output').value.trim();
-  var v2 = document.getElementById('v2-output').value.trim();
-  var v3 = document.getElementById('v3-output').value.trim();
-  var reason = document.getElementById('sel-reason').value.trim();
-
-  if (!v1 && !v2 && !v3) {
-    alert('請先貼入 AI 生成的版本內容。\nPlease paste at least one AI-generated version.');
+  var anyParsed = parsedVersions[1] || parsedVersions[2] || parsedVersions[3];
+  if (!anyParsed) {
+    alert('請先貼入 AI 生成的版本內容。\nPlease paste AI-generated output first.');
     return;
   }
   if (!selectedVersion) {
@@ -916,6 +940,7 @@ function exportRecord() {
     return;
   }
 
+  var reason = document.getElementById('sel-reason').value.trim();
   var now = new Date();
   var dateStr = now.getFullYear() + '-' +
     String(now.getMonth()+1).padStart(2,'0') + '-' +
@@ -939,17 +964,23 @@ function exportRecord() {
   record += '品牌名稱處理：' + document.getElementById('f6').value + '\n\n';
 
   record += '====================================================\n';
-  record += '【AI 生成結果 AI-Generated Versions】\n';
+  record += '【AI 生成結果（含完整分析）AI-Generated Versions with Full Analysis】\n';
   record += '====================================================\n\n';
 
-  if (v1) { record += '--- VERSION 1 ---\n' + v1 + '\n\n'; }
-  if (v2) { record += '--- VERSION 2 ---\n' + v2 + '\n\n'; }
-  if (v3) { record += '--- VERSION 3 ---\n' + v3 + '\n\n'; }
+  for (var v = 1; v <= 3; v++) {
+    if (parsedVersions[v]) {
+      record += '--- VERSION ' + v + ' ---\n';
+      record += parsedVersions[v].raw + '\n\n';
+    }
+  }
 
   record += '====================================================\n';
   record += '【選擇結果 Selection Result】\n';
   record += '====================================================\n\n';
   record += '選擇版本：Version ' + selectedVersion + '\n';
+  if (parsedVersions[selectedVersion]) {
+    record += '選擇版本文案：\n' + parsedVersions[selectedVersion].copy + '\n';
+  }
   record += '選擇理由：' + (reason || '（未填寫）') + '\n\n';
   record += '====================================================\n';
   record += 'End of Record\n';
