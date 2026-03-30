@@ -3,357 +3,720 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>廣告文案創意翻譯工具</title>
+<title>廣告文案創意翻譯工具 | Advertising Transcreation Tool</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Arial,sans-serif;background:#f7f6f3;color:#1a1a1a;min-height:100vh;padding:2rem 1rem}
-.wrap{max-width:700px;margin:0 auto;background:#fff;border-radius:14px;padding:2rem;box-shadow:0 1px 4px rgba(0,0,0,.08)}
-.hdr{padding-bottom:1.25rem;border-bottom:1px solid #e8e6e0;margin-bottom:1.75rem}
-.hdr h1{font-size:18px;font-weight:600;color:#1a1a1a;margin-bottom:4px}
-.hdr p{font-size:13px;color:#666}
-.slbl{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#999;margin-bottom:14px}
-.fb{margin-bottom:1.5rem}
-.flbl{font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:3px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.fen{font-size:12px;font-weight:400;color:#888}
-.dbg{font-size:11px;font-weight:400;background:#f2f0eb;color:#888;border:1px solid #e4e2dc;border-radius:4px;padding:1px 7px}
-.fhint{font-size:12px;color:#aaa;margin-bottom:7px}
-input[type=text],textarea,select{width:100%;font-family:inherit;font-size:14px;color:#1a1a1a;background:#faf9f7;border:1px solid #d8d6d0;border-radius:8px;padding:9px 11px;outline:none;transition:border-color .15s}
-input[type=text]:focus,textarea:focus,select:focus{border-color:#888;background:#fff}
-textarea{resize:vertical;min-height:64px;line-height:1.55}
-select{height:38px;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23999' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
-.cbgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:7px}
-.cbi{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:#1a1a1a;background:#faf9f7;border:1px solid #e4e2dc;border-radius:8px;padding:8px 11px;cursor:pointer;line-height:1.4;transition:border-color .15s,background .15s}
-.cbi:hover{background:#f2f0eb;border-color:#ccc}
-.cbi input{width:auto;cursor:pointer;margin-top:2px;flex-shrink:0;accent-color:#3a3a3a}
-.izh{font-weight:600;display:block;font-size:13px}
-.ien{font-size:11px;color:#aaa;display:block}
-.avoidrow{display:flex;flex-wrap:wrap;gap:7px}
-.achip{display:flex;align-items:center;gap:5px;font-size:12px;color:#1a1a1a;background:#faf9f7;border:1px solid #e4e2dc;border-radius:20px;padding:5px 12px;cursor:pointer;transition:background .15s}
-.achip:hover{background:#f2f0eb}
-.achip input{width:auto;cursor:pointer;accent-color:#3a3a3a}
-.czh{font-weight:600}
-.cen{color:#aaa;font-size:11px}
-.sql{font-size:12px;color:#888;margin-bottom:5px;margin-top:10px}
-.divider{border:none;border-top:1px solid #e8e6e0;margin:1.75rem 0}
-.cklist{background:#faf9f7;border:1px solid #e4e2dc;border-radius:10px;padding:1rem 1.25rem;margin-bottom:1.5rem}
-.ckttl{font-size:13px;font-weight:600;color:#1a1a1a;margin-bottom:10px}
-.ckrow{display:flex;align-items:center;gap:9px;font-size:13px;color:#888;margin-bottom:7px}
-.dot{width:9px;height:9px;border-radius:50%;background:#ddd;flex-shrink:0;transition:background .2s}
-.dot.on{background:#2a9d6e}
-.genbtn{width:100%;padding:11px;font-size:14px;font-weight:600;color:#fff;background:#2a2a2a;border:none;border-radius:9px;cursor:pointer;transition:background .15s}
-.genbtn:hover{background:#444}
-.genbtn:disabled{background:#ccc;cursor:not-allowed}
-.vcard{background:#fff;border:1px solid #e4e2dc;border-radius:12px;padding:1.25rem;margin-bottom:14px}
-.vhdr{display:flex;align-items:center;gap:9px;margin-bottom:14px}
-.vtag{font-size:12px;font-weight:600;background:#f2f0eb;color:#666;border:1px solid #e4e2dc;border-radius:5px;padding:3px 9px}
-.vstrat{font-size:13px;color:#888}
-.sent-pair{margin-bottom:11px}
-.sent-en{font-size:15px;color:#1a1a1a;line-height:1.75;font-style:italic}
-.sent-zh{font-size:13px;color:#666;line-height:1.6;margin-top:4px;padding-left:10px;border-left:2px solid #e4e2dc}
-.expl-box{background:#faf9f7;border-radius:8px;padding:11px 13px;margin-top:13px;font-size:13px;color:#666;line-height:1.75}
-.expl-ttl{font-size:11px;font-weight:600;color:#aaa;text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px}
-.sel-row{display:flex;margin-top:14px;padding-top:13px;border-top:1px solid #e8e6e0}
-.selbtn{flex:1;padding:9px;font-size:13px;font-weight:600;color:#1a1a1a;background:#faf9f7;border:1px solid #d8d6d0;border-radius:8px;cursor:pointer;transition:all .15s}
-.selbtn:hover{background:#f2f0eb;border-color:#bbb}
-.selbtn.chosen{background:#e8f5ef;color:#1a7a4e;border-color:#a8d9be}
-.loading{text-align:center;padding:2.5rem 1rem;font-size:14px;color:#888}
-.spinner{display:inline-block;width:20px;height:20px;border:2px solid #e4e2dc;border-top-color:#888;border-radius:50%;animation:spin .8s linear infinite;margin-right:10px;vertical-align:middle}
-@keyframes spin{to{transform:rotate(360deg)}}
-.errmsg{font-size:13px;color:#c0392b;padding:12px;border:1px solid #f0c0bc;border-radius:8px;background:#fef5f4;line-height:1.6}
-.expbtn{margin-top:1.5rem;width:100%;padding:10px;font-size:13px;font-weight:600;color:#1a1a1a;background:#faf9f7;border:1px solid #d8d6d0;border-radius:9px;cursor:pointer;transition:background .15s}
-.expbtn:hover{background:#f2f0eb}
-.expbtn:disabled{opacity:.4;cursor:not-allowed}
-.chosen-notice{text-align:center;font-size:13px;color:#2a9d6e;font-weight:600;margin-top:12px;padding:10px;background:#e8f5ef;border-radius:8px}
+  :root {
+    --accent: #2C2C2C;
+    --accent-light: #F0F0F0;
+    --accent-mid: #BDBDBD;
+    --bg: #F5F5F3;
+    --white: #FFFFFF;
+    --border: #D6D6D6;
+    --text: #2C2C2C;
+    --text-sub: #6B6B6B;
+    --error: #B91C1C;
+    --selected-bg: #EFEFEF;
+    --selected-border: #2C2C2C;
+    --radius: 6px;
+    --shadow: 0 1px 4px rgba(0,0,0,0.08);
+    --font: 'Helvetica Neue', Arial, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; font-size: 14px; }
+
+  /* Header */
+  .header { background: #1A1A1A; color: white; padding: 18px 32px; display: flex; align-items: center; gap: 14px; }
+  .header h1 { font-size: 16px; font-weight: 600; letter-spacing: 0.01em; }
+  .header p { font-size: 11px; opacity: 0.55; margin-top: 2px; }
+
+  /* Progress */
+  .progress-bar { background: var(--white); border-bottom: 1px solid var(--border); padding: 0 32px; display: flex; }
+  .progress-step { flex: 1; padding: 13px 14px; display: flex; align-items: center; gap: 9px; font-size: 13px; color: var(--text-sub); border-bottom: 2px solid transparent; cursor: pointer; transition: all 0.15s; user-select: none; }
+  .progress-step:hover { background: var(--accent-light); }
+  .progress-step.active { color: var(--text); border-bottom-color: var(--accent); font-weight: 600; }
+  .progress-step.completed { color: var(--text-sub); border-bottom-color: var(--accent-mid); }
+  .step-num { width: 22px; height: 22px; border-radius: 50%; background: var(--accent-light); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+  .progress-step.active .step-num { background: var(--accent); color: white; border-color: var(--accent); }
+  .progress-step.completed .step-num { background: var(--accent-mid); color: white; border-color: var(--accent-mid); }
+  .step-label { line-height: 1.3; }
+  .step-label small { display: block; font-size: 11px; opacity: 0.6; font-weight: 400; }
+
+  /* Layout */
+  .main { max-width: 860px; margin: 28px auto; padding: 0 20px; }
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* Cards */
+  .card { background: var(--white); border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); margin-bottom: 16px; overflow: hidden; }
+  .card-header { padding: 14px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; background: var(--accent-light); }
+  .card-header h2 { font-size: 14px; font-weight: 600; }
+  .card-body { padding: 20px; }
+
+  /* Fields */
+  .field-hint { font-size: 12px; color: var(--text-sub); margin-bottom: 8px; line-height: 1.55; }
+  .field-group { margin-bottom: 16px; }
+  .field-group:last-child { margin-bottom: 0; }
+  .field-group > label { display: block; font-weight: 600; font-size: 13px; margin-bottom: 6px; }
+
+  input[type="text"], input[type="number"], textarea, select {
+    width: 100%; padding: 9px 12px; border: 1px solid var(--border); border-radius: var(--radius);
+    font-family: var(--font); font-size: 14px; color: var(--text); background: var(--white);
+    transition: border-color 0.15s; outline: none; resize: vertical;
+  }
+  input[type="text"]:focus, input[type="number"]:focus, textarea:focus, select:focus {
+    border-color: var(--accent); box-shadow: 0 0 0 2px rgba(44,44,44,0.08);
+  }
+  textarea { min-height: 80px; }
+  input[type="number"] { -moz-appearance: textfield; }
+  input[type="number"]::-webkit-inner-spin-button { opacity: 1; }
+
+  /* Checkbox pills — using div instead of label to avoid event conflict */
+  .checkbox-group { display: flex; flex-wrap: wrap; gap: 7px; }
+  .cb-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 7px 13px; border: 1px solid var(--border); border-radius: 20px;
+    cursor: pointer; font-size: 13px; user-select: none; background: var(--white);
+    transition: all 0.15s;
+  }
+  .cb-pill:hover { border-color: var(--accent); background: var(--accent-light); }
+  .cb-pill.checked { border-color: var(--accent); background: var(--selected-bg); font-weight: 600; }
+  .cb-pill .cb-box {
+    width: 14px; height: 14px; border: 1px solid var(--border); border-radius: 3px;
+    display: flex; align-items: center; justify-content: center; font-size: 10px; flex-shrink: 0;
+    background: var(--white); transition: all 0.15s;
+  }
+  .cb-pill.checked .cb-box { background: var(--accent); border-color: var(--accent); color: white; }
+
+  /* Radio pills */
+  .radio-group { display: flex; gap: 8px; flex-wrap: wrap; }
+  .radio-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 14px; border: 1px solid var(--border); border-radius: 20px;
+    cursor: pointer; font-size: 13px; user-select: none; background: var(--white);
+    transition: all 0.15s;
+  }
+  .radio-pill:hover { border-color: var(--accent); background: var(--accent-light); }
+  .radio-pill.selected { border-color: var(--accent); background: var(--selected-bg); font-weight: 600; }
+
+  /* Validation */
+  .validation-panel { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 18px; margin-bottom: 16px; }
+  .validation-panel h3 { font-size: 12px; font-weight: 600; color: var(--text-sub); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .check-list { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+  .check-list li { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-sub); }
+  .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .dot.empty { background: var(--border); }
+  .dot.filled { background: var(--accent); }
+
+  /* Buttons */
+  .btn { display: inline-flex; align-items: center; gap: 7px; padding: 10px 20px; border-radius: var(--radius); font-family: var(--font); font-size: 14px; font-weight: 600; cursor: pointer; border: none; transition: all 0.15s; }
+  .btn-primary { background: var(--accent); color: white; }
+  .btn-primary:hover { background: #444; }
+  .btn-outline { background: white; color: var(--text); border: 1px solid var(--border); }
+  .btn-outline:hover { background: var(--accent-light); border-color: var(--accent); }
+  .btn-export { background: var(--accent); color: white; padding: 11px 24px; font-size: 14px; }
+  .btn-export:hover { background: #444; }
+  .btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; align-items: center; }
+
+  /* Info boxes */
+  .info-box { background: var(--accent-light); border-left: 3px solid var(--accent-mid); border-radius: 4px; padding: 11px 14px; font-size: 13px; line-height: 1.6; margin-bottom: 14px; color: var(--text-sub); }
+  .warning-box { background: #FAFAFA; border-left: 3px solid var(--accent-mid); border-radius: 4px; padding: 11px 14px; font-size: 13px; line-height: 1.6; margin-bottom: 14px; color: var(--text-sub); }
+
+  /* Prompt display */
+  .prompt-box { background: #FAFAFA; border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; font-family: monospace; font-size: 12.5px; line-height: 1.7; white-space: pre-wrap; word-break: break-word; max-height: 400px; overflow-y: auto; color: var(--text); }
+
+  .copy-success { display: none; color: var(--text-sub); font-size: 13px; font-weight: 600; }
+
+  /* Divider / section title */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 18px 0; }
+  .section-title { font-size: 11px; font-weight: 700; color: var(--text-sub); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+
+  /* Two-col */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .age-row { display: flex; align-items: center; gap: 10px; }
+  .age-row span { font-size: 13px; color: var(--text-sub); white-space: nowrap; }
+  .age-row input { flex: 1; }
+
+  /* Stage 3 */
+  .version-paste-area { margin-bottom: 12px; }
+  .version-paste-area > label { display: block; font-weight: 600; font-size: 13px; margin-bottom: 5px; }
+  .version-paste-area textarea { min-height: 95px; }
+
+  .version-selector { display: flex; gap: 10px; flex-wrap: wrap; margin: 14px 0; }
+  .version-btn { flex: 1; min-width: 120px; padding: 13px 14px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--white); cursor: pointer; text-align: center; transition: all 0.15s; font-family: var(--font); font-size: 14px; font-weight: 600; color: var(--text-sub); }
+  .version-btn:hover { border-color: var(--accent); background: var(--accent-light); color: var(--text); }
+  .version-btn.selected { border-color: var(--accent); background: var(--selected-bg); color: var(--text); box-shadow: 0 0 0 2px rgba(44,44,44,0.1); }
+  .version-btn small { display: block; font-size: 11px; font-weight: 400; margin-top: 3px; opacity: 0.6; }
+
+  .export-summary { background: var(--accent-light); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 16px; margin-bottom: 14px; display: none; }
+  .export-summary p { font-size: 13px; color: var(--text-sub); }
+
+  /* Tag */
+  .tag { display: inline-block; padding: 2px 7px; border-radius: 3px; font-size: 10px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; background: var(--border); color: var(--text-sub); flex-shrink: 0; }
+
+  @media (max-width: 600px) {
+    .two-col { grid-template-columns: 1fr; }
+    .step-label small { display: none; }
+    .progress-step { padding: 12px 8px; gap: 6px; }
+    .header { padding: 16px 20px; }
+    .main { padding: 0 14px; }
+  }
 </style>
 </head>
 <body>
-<div class="wrap">
 
-<div class="hdr">
-  <h1>廣告文案創意翻譯工具 <span style="font-size:14px;font-weight:400;color:#888">Advertising Transcreation Tool</span></h1>
-  <p>填寫以下欄位，系統將自動組裝提示詞，供您複製後貼入 ChatGPT 或 Claude.ai，生成三個英文廣告版本。</p>
-  <p style="color:#aaa;margin-top:4px;font-size:12px">Complete the fields below. The tool assembles a structured prompt for you to paste into ChatGPT or Claude.ai to generate three English advertising versions.</p>
-</div>
-
-<div class="slbl">Stage 1 — 填寫資料 Input Fields</div>
-
-<div class="fb">
-  <div class="flbl">原始文案 <span class="fen">Source text</span></div>
-  <div class="fhint">貼上要翻譯的中文廣告文案</div>
-  <textarea id="srcTxt" placeholder="例如：讓每一口都成為一種享受，天然食材，用心製作。"></textarea>
-</div>
-
-<div class="fb">
-  <div class="flbl">目標市場 <span class="fen">Target market</span></div>
-  <select id="mkt">
-    <option value="">— 請選擇 —</option>
-    <option value="North American English (US/Canada)">北美英語市場（美國／加拿大）</option>
-    <option value="British and Irish English (UK/Ireland)">英國愛爾蘭市場</option>
-    <option value="Australian and New Zealand English">澳紐英語市場</option>
-    <option value="Southeast Asian English (Singapore/Malaysia)">東南亞英語市場（新加坡／馬來西亞）</option>
-    <option value="Pan-English (global/neutral)">全球中性英語</option>
-  </select>
-</div>
-
-<div class="fb">
-  <div class="flbl">品牌語調 <span class="fen">Brand tone</span></div>
-  <div class="fhint">勾選符合品牌形象的語調（可複選）</div>
-  <div class="cbgrid">
-    <label class="cbi"><input type="checkbox" name="tone" value="warm and nurturing"><span><span class="izh">溫暖親切</span><span class="ien">warm and nurturing</span></span></label>
-    <label class="cbi"><input type="checkbox" name="tone" value="energetic and bold"><span><span class="izh">活力大膽</span><span class="ien">energetic and bold</span></span></label>
-    <label class="cbi"><input type="checkbox" name="tone" value="professional and credible"><span><span class="izh">專業可信</span><span class="ien">professional and credible</span></span></label>
-    <label class="cbi"><input type="checkbox" name="tone" value="playful and casual"><span><span class="izh">輕鬆有趣</span><span class="ien">playful and casual</span></span></label>
-    <label class="cbi"><input type="checkbox" name="tone" value="minimalist and sophisticated"><span><span class="izh">極簡精緻</span><span class="ien">minimalist and sophisticated</span></span></label>
-    <label class="cbi"><input type="checkbox" name="tone" value="trustworthy and reassuring"><span><span class="izh">踏實安心</span><span class="ien">trustworthy and reassuring</span></span></label>
-  </div>
-  <div class="sql">需要避免的語調</div>
-  <div class="avoidrow">
-    <label class="achip"><input type="checkbox" name="avoid" value="overly formal"><span class="czh">過於正式</span>&nbsp;<span class="cen">overly formal</span></label>
-    <label class="achip"><input type="checkbox" name="avoid" value="aggressive or pushy"><span class="czh">強硬強迫</span>&nbsp;<span class="cen">aggressive</span></label>
-    <label class="achip"><input type="checkbox" name="avoid" value="overly casual or slang-heavy"><span class="czh">俚語口語</span>&nbsp;<span class="cen">slang-heavy</span></label>
-    <label class="achip"><input type="checkbox" name="avoid" value="overly technical"><span class="czh">艱深技術</span>&nbsp;<span class="cen">overly technical</span></label>
-    <label class="achip"><input type="checkbox" name="avoid" value="sentimental or melodramatic"><span class="czh">煽情誇張</span>&nbsp;<span class="cen">melodramatic</span></label>
+<div class="header">
+  <div>
+    <h1>廣告文案創意翻譯工具 | Advertising Transcreation Tool</h1>
+    <p>AI 輔助中英廣告創意翻譯 · AI-Assisted Chinese-English Advertising Transcreation</p>
   </div>
 </div>
 
-<div class="fb">
-  <div class="flbl">目標受眾 <span class="fen">Audience profile</span></div>
-  <div class="sql">年齡層與生活型態</div>
-  <input type="text" id="audAge" placeholder="例如：25–40歲，注重健康的都市上班族">
-  <div class="sql">英語理解程度</div>
-  <select id="audLang">
-    <option value="">— 請選擇 —</option>
-    <option value="everyday conversational English">日常對話程度</option>
-    <option value="intermediate general English">中等一般程度</option>
-    <option value="sophisticated or literary English">高級精緻程度</option>
-  </select>
-  <div class="sql">核心價值觀或購買動機</div>
-  <input type="text" id="audVal" placeholder="例如：重視天然、家庭健康、生活品質">
+<div class="progress-bar">
+  <div class="progress-step active" id="nav-1" onclick="goToStage(1)">
+    <div class="step-num">1</div>
+    <div class="step-label">品牌資訊輸入<small>Brand Information</small></div>
+  </div>
+  <div class="progress-step" id="nav-2" onclick="goToStage(2)">
+    <div class="step-num">2</div>
+    <div class="step-label">提示詞組裝<small>Assemble Prompt</small></div>
+  </div>
+  <div class="progress-step" id="nav-3" onclick="goToStage(3)">
+    <div class="step-num">3</div>
+    <div class="step-label">版本選擇與記錄<small>Select &amp; Export</small></div>
+  </div>
 </div>
 
-<div class="fb">
-  <div class="flbl">文化考量 <span class="fen">Cultural requirements</span></div>
-  <div class="sql">可融入的在地文化元素（如有）</div>
-  <input type="text" id="cultIn" placeholder="例如：季節意象、在地食文化（沒有可留空）">
-  <div class="sql">需要迴避的文化禁忌或敏感議題</div>
-  <input type="text" id="cultAv" placeholder="例如：宗教意涵、特定顏色象徵（沒有可留空）">
-  <div class="sql">偏好的文化語域</div>
-  <select id="cultReg">
-    <option value="">— 請選擇 —</option>
-    <option value="individualistic and direct">個人主義、直接表達</option>
-    <option value="community-oriented and indirect">群體導向、間接表達</option>
-    <option value="achievement and aspiration focused">成就與抱負導向</option>
-    <option value="nature and lifestyle focused">自然與生活風格導向</option>
-    <option value="family and relationship focused">家庭與關係導向</option>
-  </select>
-</div>
+<div class="main">
 
-<div class="fb">
-  <div class="flbl">核心訊息 <span class="fen">Key message</span></div>
-  <div class="fhint">這則廣告最重要的一句話是什麼？</div>
-  <textarea id="keyMsg" placeholder="例如：這個產品用天然食材讓日常時刻變得特別。" style="min-height:50px"></textarea>
-</div>
+  <!-- ===== STAGE 1 ===== -->
+  <div class="panel active" id="panel-1">
 
-<hr class="divider">
+    <div class="info-box">
+      <strong>使用說明：</strong>請依序填寫以下六個欄位。標有 <span style="color:var(--error);font-weight:700">*</span> 的欄位為必填。填寫完成後，點選「組裝提示詞」。<br>
+      <strong>Instructions:</strong> Complete all six fields. Fields marked <span style="color:var(--error);font-weight:700">*</span> are required.
+    </div>
 
-<div class="cklist">
-  <div class="ckttl">填寫確認清單 Input Checklist</div>
-  <div class="ckrow"><div class="dot" id="d1"></div><span>原始文案已填寫 Source text entered</span></div>
-  <div class="ckrow"><div class="dot" id="d2"></div><span>目標市場已選擇 Target market selected</span></div>
-  <div class="ckrow"><div class="dot" id="d3"></div><span>品牌語調已選擇 Brand tone selected</span></div>
-  <div class="ckrow"><div class="dot" id="d4"></div><span>目標受眾已填寫 Audience profile completed</span></div>
-  <div class="ckrow"><div class="dot" id="d5"></div><span>核心訊息已填寫 Key message entered</span></div>
-</div>
+    <div class="validation-panel">
+      <h3>填寫進度 Completion Status</h3>
+      <ul class="check-list">
+        <li><span class="dot empty" id="dot-1"></span>欄位 1：原文廣告文案 Source text</li>
+        <li><span class="dot empty" id="dot-2"></span>欄位 2：產品類別 Product category</li>
+        <li><span class="dot empty" id="dot-3"></span>欄位 3：目標受眾 Target audience</li>
+        <li><span class="dot empty" id="dot-4"></span>欄位 4：品牌語氣 Brand tone</li>
+        <li><span class="dot filled" id="dot-5"></span>欄位 5：文化注意事項 Cultural notes（選填）</li>
+        <li><span class="dot empty" id="dot-6"></span>欄位 6：品牌名稱處理 Brand name handling</li>
+      </ul>
+    </div>
 
-<button class="genbtn" id="genBtn" onclick="generate()">組裝提示詞 Assemble Prompt</button>
+    <!-- Field 1 -->
+    <div class="card">
+      <div class="card-header">
+        <span class="tag">Field 1</span>
+        <h2>原文廣告文案 · Source Text <span style="color:var(--error)">*</span></h2>
+      </div>
+      <div class="card-body">
+        <p class="field-hint">請貼上您要翻譯的中文廣告文案（完整句子或段落）。<br>Paste the Chinese advertising copy you wish to transcreate.</p>
+        <textarea id="f1-source" rows="4" placeholder="例：膠原蛋白滿滿，讓你從內到外散發光彩，成為最美的自己。" oninput="validateField(1)"></textarea>
+      </div>
+    </div>
 
-<div id="out"></div>
+    <!-- Field 2 -->
+    <div class="card">
+      <div class="card-header">
+        <span class="tag">Field 2</span>
+        <h2>產品類別 · Product Category <span style="color:var(--error)">*</span></h2>
+      </div>
+      <div class="card-body">
+        <p class="field-hint">請選擇最符合您產品的類別。Select the category that best fits your product.</p>
+        <select id="f2-category" onchange="toggleOtherCategory(); validateField(2)">
+          <option value="">— 請選擇 / Please select —</option>
+          <option value="食品與飲料 (Food and Beverage)">食品與飲料 Food &amp; Beverage</option>
+          <option value="美妝與保養 (Beauty and Skincare)">美妝與保養 Beauty &amp; Skincare</option>
+          <option value="服飾與時尚 (Apparel and Fashion)">服飾與時尚 Apparel &amp; Fashion</option>
+          <option value="科技產品 (Technology Products)">科技產品 Technology Products</option>
+          <option value="工業與設備 (Industrial Equipment)">工業與設備 Industrial Equipment</option>
+          <option value="健康與保健 (Health and Wellness)">健康與保健 Health &amp; Wellness</option>
+          <option value="居家生活 (Home and Living)">居家生活 Home &amp; Living</option>
+          <option value="other">其他 Other（請說明）</option>
+        </select>
+        <div id="other-category-box" style="display:none; margin-top:10px;">
+          <input type="text" id="f2-other" placeholder="請描述您的產品類別 / Describe your product category" oninput="validateField(2)">
+        </div>
+      </div>
+    </div>
+
+    <!-- Field 3 -->
+    <div class="card">
+      <div class="card-header">
+        <span class="tag">Field 3</span>
+        <h2>目標受眾 · Target Audience <span style="color:var(--error)">*</span></h2>
+      </div>
+      <div class="card-body">
+        <div class="two-col">
+          <div class="field-group">
+            <label>年齡層 Age Range</label>
+            <div class="age-row">
+              <input type="number" id="f3-age-min" min="1" max="120" placeholder="最小 Min" oninput="validateField(3)" style="text-align:center;">
+              <span>—</span>
+              <input type="number" id="f3-age-max" min="1" max="120" placeholder="最大 Max" oninput="validateField(3)" style="text-align:center;">
+              <span>歲</span>
+            </div>
+          </div>
+          <div class="field-group">
+            <label>目標市場 Target Market</label>
+            <select id="f3-market" onchange="validateField(3)">
+              <option value="">— 請選擇 —</option>
+              <option value="北美（美國/加拿大）英語市場">北美（美國/加拿大）</option>
+              <option value="英國/澳洲英語市場">英國 / 澳洲</option>
+              <option value="東南亞英語市場">東南亞英語市場</option>
+              <option value="全球英語市場 (Global English)">全球英語市場</option>
+            </select>
+          </div>
+        </div>
+        <div class="field-group">
+          <label>消費動機或受眾特徵 Motivation / Profile <span style="font-weight:400;font-size:12px;color:var(--text-sub)">（選填）</span></label>
+          <input type="text" id="f3-motivation" placeholder="例：注重健康、追求生活品質的都市女性" oninput="validateField(3)">
+        </div>
+      </div>
+    </div>
+
+    <!-- Field 4 -->
+    <div class="card">
+      <div class="card-header">
+        <span class="tag">Field 4</span>
+        <h2>品牌語氣 · Brand Tone <span style="color:var(--error)">*</span></h2>
+      </div>
+      <div class="card-body">
+        <p class="field-hint">可複選，選擇最符合您品牌個性的語氣（至少選 1 項）。<br>Select all that apply — at least one required.</p>
+        <div class="checkbox-group" id="f4-tones">
+          <div class="cb-pill" onclick="toggleTone(this)"><span class="cb-box">✓</span>活潑輕鬆 Playful<span style="display:none">活潑輕鬆 (Playful and Casual)</span></div>
+          <div class="cb-pill" onclick="toggleTone(this)"><span class="cb-box">✓</span>溫暖親切 Warm<span style="display:none">溫暖親切 (Warm and Friendly)</span></div>
+          <div class="cb-pill" onclick="toggleTone(this)"><span class="cb-box">✓</span>專業可信 Professional<span style="display:none">專業可信 (Professional and Credible)</span></div>
+          <div class="cb-pill" onclick="toggleTone(this)"><span class="cb-box">✓</span>高端精緻 Luxurious<span style="display:none">高端精緻 (Luxurious and Sophisticated)</span></div>
+          <div class="cb-pill" onclick="toggleTone(this)"><span class="cb-box">✓</span>清新自然 Natural<span style="display:none">清新自然 (Fresh and Natural)</span></div>
+          <div class="cb-pill" onclick="toggleTone(this)"><span class="cb-box">✓</span>科技前衛 Innovative<span style="display:none">科技感前衛 (Innovative and Tech-forward)</span></div>
+          <div class="cb-pill" onclick="toggleTone(this)"><span class="cb-box">✓</span>勵志積極 Inspirational<span style="display:none">勵志積極 (Inspirational and Motivating)</span></div>
+          <div class="cb-pill" onclick="toggleTone(this)"><span class="cb-box">✓</span>幽默風趣 Witty<span style="display:none">幽默風趣 (Witty and Humorous)</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Field 5 -->
+    <div class="card">
+      <div class="card-header">
+        <span class="tag">Field 5</span>
+        <h2>文化與語言注意事項 · Cultural Notes <span style="font-size:12px;font-weight:400;color:var(--text-sub)">（選填）</span></h2>
+      </div>
+      <div class="card-body">
+        <p class="field-hint">是否有需要特別避免或強調的文化元素？<br>Any cultural or linguistic elements to avoid or emphasize?</p>
+        <textarea id="f5-culture" rows="3" placeholder="例：避免使用帶有東方刻板印象的語言；強調北美用戶對「beauty from within」的接受度" oninput="validateField(5)"></textarea>
+      </div>
+    </div>
+
+    <!-- Field 6 -->
+    <div class="card">
+      <div class="card-header">
+        <span class="tag">Field 6</span>
+        <h2>品牌名稱怎麼翻？ · Brand Name <span style="color:var(--error)">*</span></h2>
+      </div>
+      <div class="card-body">
+        <p class="field-hint">您的品牌名稱或產品名稱，希望保留中文原字、翻成英文，還是有指定的譯名？<br>Should your brand or product name stay in Chinese, be translated to English, or do you have a specific translation in mind?</p>
+        <div class="radio-group">
+          <div class="radio-pill" id="bn-keep" onclick="selectBrandName('keep', this)">保留原文 Keep as-is</div>
+          <div class="radio-pill" id="bn-translate" onclick="selectBrandName('translate', this)">翻譯成英文 Translate</div>
+          <div class="radio-pill" id="bn-specify" onclick="selectBrandName('specify', this)">指定翻譯 Specify</div>
+        </div>
+        <div id="bn-specify-box" style="display:none; margin-top:10px;">
+          <input type="text" id="f6-brandname-detail" placeholder="例：「膠原美研」翻譯為 CollagenLab" oninput="updateBrandNameValue()">
+        </div>
+        <input type="hidden" id="f6-brandname" value="">
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" id="assemble-btn" type="button">▶ 組裝提示詞 Assemble Prompt</button>
+    </div>
+
+  </div>
+
+  <!-- ===== STAGE 2 ===== -->
+  <div class="panel" id="panel-2">
+    <div class="card">
+      <div class="card-header">
+        <span class="tag">Stage 2</span>
+        <h2>已組裝的提示詞 · Assembled Prompt</h2>
+      </div>
+      <div class="card-body">
+        <div class="info-box">
+          <strong>下一步：</strong>點選「複製提示詞」，前往 ChatGPT 或 Claude.ai 貼上並生成文案。完成後，點選「進入 Stage 3」。<br>
+          <strong>Next:</strong> Copy the prompt and paste into ChatGPT or Claude.ai. Then return for Stage 3.
+        </div>
+        <div class="prompt-box" id="assembled-prompt"></div>
+        <div class="btn-row">
+          <button class="btn btn-primary" type="button" id="copy-btn">📋 複製提示詞 Copy Prompt</button>
+          <span class="copy-success" id="copy-success">✓ 已複製 Copied</span>
+          <button class="btn btn-outline" type="button" onclick="goToStage(1)">← 返回修改</button>
+        </div>
+        <hr class="divider">
+        <div class="section-title">完成 AI 生成後，進入 Stage 3</div>
+        <button class="btn btn-primary" type="button" onclick="goToStage(3)" style="margin-top:6px;">▶ 進入版本選擇與記錄</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== STAGE 3 ===== -->
+  <div class="panel" id="panel-3">
+    <div class="card">
+      <div class="card-header">
+        <span class="tag">Stage 3</span>
+        <h2>版本貼入、選擇與記錄匯出 · Paste, Select &amp; Export</h2>
+      </div>
+      <div class="card-body">
+        <div class="warning-box">
+          <strong>操作說明：</strong>將 AI 生成的三個版本分別貼入下方欄位，選擇偏好版本並填寫理由，最後點選「匯出記錄」。<br>
+          <strong>Instructions:</strong> Paste each AI-generated version, select your preferred one, add a note, then export.
+        </div>
+
+        <div class="section-title">貼入 AI 生成結果 Paste All AI Output</div>
+        <p class="field-hint" style="margin-bottom:10px;">請將 ChatGPT 或 Claude.ai 回覆的完整內容一次全部貼入下方（三個版本不需分開）。<br>Paste the entire AI response here at once — all three versions together.</p>
+        <textarea id="all-output" rows="14" placeholder="將 AI 生成的完整回覆貼入此處（Version 1、2、3 及所有 Explanation）&#10;Paste the full AI response here (Version 1, 2, 3 and all Explanations)" oninput="updateExportSummary()" style="min-height:200px;"></textarea>
+
+        <hr class="divider">
+
+        <div class="section-title">選擇版本 Select Preferred Version</div>
+        <div class="version-selector">
+          <button class="version-btn" id="sel-v1" type="button" onclick="selectVersion(1)">Version 1<small>點選選擇</small></button>
+          <button class="version-btn" id="sel-v2" type="button" onclick="selectVersion(2)">Version 2<small>點選選擇</small></button>
+          <button class="version-btn" id="sel-v3" type="button" onclick="selectVersion(3)">Version 3<small>點選選擇</small></button>
+        </div>
+
+        <div class="field-group" style="margin-top:14px;">
+          <label>選擇理由 Reason for Selection <span style="font-weight:400;font-size:12px;color:var(--text-sub)">（選填）</span></label>
+          <textarea id="sel-reason" rows="3" placeholder="例：Version 2 的語氣最符合品牌調性，且對目標受眾特性的說明最為充分。" oninput="updateExportSummary()"></textarea>
+        </div>
+
+        <hr class="divider">
+        <div class="section-title">匯出記錄 Export Session Record</div>
+        <div class="export-summary" id="export-summary">
+          <p id="export-summary-text"></p>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-export" type="button" id="export-btn">💾 匯出記錄 Export Record (.txt)</button>
+          <button class="btn btn-outline" type="button" onclick="goToStage(2)">← 返回提示詞</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </div>
 
 <script>
-var _prompt='',_data={},_versions=[],_chosen=-1,_ts='';
+// ── State ──
+var currentStage = 1;
+var selectedVersion = null;
+var assembledPromptText = '';
+var fieldValues = { 1:'', 2:'', 3:'', 4:'', 5:'（未填寫）', 6:'' };
 
-function upd(){
-  var c=[
-    document.getElementById('srcTxt').value.trim().length>0,
-    document.getElementById('mkt').value!=='',
-    document.querySelectorAll('input[name=tone]:checked').length>0,
-    document.getElementById('audAge').value.trim().length>0&&document.getElementById('audLang').value!=='',
-    document.getElementById('keyMsg').value.trim().length>0
-  ];
-  c.forEach(function(ok,i){
-    var d=document.getElementById('d'+(i+1));
-    ok?d.classList.add('on'):d.classList.remove('on');
-  });
-  document.getElementById('genBtn').disabled=!c.every(Boolean);
-}
-
-document.querySelectorAll('input,select,textarea').forEach(function(el){
-  el.addEventListener('change',upd);
-  el.addEventListener('input',upd);
+// ── Wire up buttons after DOM ready ──
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('assemble-btn').addEventListener('click', assemblePrompt);
+  document.getElementById('copy-btn').addEventListener('click', copyPrompt);
+  document.getElementById('export-btn').addEventListener('click', exportRecord);
 });
 
-function getData(){
-  return{
-    src:document.getElementById('srcTxt').value.trim(),
-    mkt:document.getElementById('mkt').value,
-    tones:Array.from(document.querySelectorAll('input[name=tone]:checked')).map(function(e){return e.value}),
-    avoids:Array.from(document.querySelectorAll('input[name=avoid]:checked')).map(function(e){return e.value}),
-    audAge:document.getElementById('audAge').value.trim(),
-    audLang:document.getElementById('audLang').value,
-    audVal:document.getElementById('audVal').value.trim(),
-    cultIn:document.getElementById('cultIn').value.trim(),
-    cultAv:document.getElementById('cultAv').value.trim(),
-    cultReg:document.getElementById('cultReg').value,
-    key:document.getElementById('keyMsg').value.trim()
-  };
-}
-
-function buildPrompt(d){
-  return 'You are a professional advertising transcreation specialist.\n\nSOURCE TEXT: "'+d.src+'"\n\nCONSTRAINTS:\n1. Cultural appropriateness: target market is '+d.mkt+'. Incorporate: '+(d.cultIn||'none')+'. Avoid: '+(d.cultAv||'none')+'. Register: '+(d.cultReg||'not specified')+'.\n2. Emotional impact: key message is "'+d.key+'".\n3. Brand consistency: required tone: '+d.tones.join(', ')+'. Avoid: '+(d.avoids.length?d.avoids.join(', '):'none')+'.\n4. Creative equivalence: do not translate literally; adapt imagery and emotional appeal for equivalent creative impact.\n5. Target audience: '+d.audAge+', language level: '+d.audLang+', values: '+(d.audVal||'not specified')+'.\n\nOUTPUT INSTRUCTIONS:\nGenerate exactly 3 versions with clearly distinct creative strategies.\n\nFor EACH version output in this exact format:\n===VERSION_START===\nENGLISH: [the transcreated advertising copy — natural sentences]\nCHINESE_TRANSLATION: [translate the English copy into Traditional Chinese, sentence by sentence, same order]\nBRIEF_EXPLANATION: [2-3 sentences in Traditional Chinese explaining the creative approach and why it suits the brand and audience. Flowing prose, no lists.]\n===VERSION_END===';
-}
-
-async function generate(){
-  _data=getData();
-  _prompt=buildPrompt(_data);
-  _ts=new Date().toLocaleString('zh-TW');
-  var out=document.getElementById('out');
-  var btn=document.getElementById('genBtn');
-  btn.disabled=true;
-
-  var safePrompt=_prompt.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-
-  out.innerHTML='<div style="margin-top:1.75rem">'
-    +'<hr class="divider">'
-    +'<div class="slbl">Stage 2 — 系統自動組裝的完整提示詞 Assembled Prompt</div>'
-    +'<div style="background:#faf9f7;border:1px solid #e4e2dc;border-radius:10px;padding:1rem 1.25rem;margin-bottom:1.5rem">'
-    +'<div style="font-size:12px;color:#666;margin-bottom:8px">根據您填寫的資料，系統已自動產生以下完整提示詞。<br><span style="color:#aaa">The tool has assembled the following structured prompt based on your inputs.</span></div>'
-    +'<div id="promptBox" style="font-family:monospace;font-size:12px;color:#444;white-space:pre-wrap;line-height:1.65;background:#fff;border:1px solid #e4e2dc;border-radius:8px;padding:12px;max-height:280px;overflow-y:auto">'+safePrompt+'</div>'
-    +'<button onclick="cpyPrompt()" id="cpyBtn" style="margin-top:10px;padding:9px 18px;font-size:13px;font-weight:600;color:#fff;background:#2a2a2a;border:none;border-radius:8px;cursor:pointer">複製提示詞 Copy Prompt</button>'
-    +'</div>'
-    +'<div style="background:#f0f7ff;border:1px solid #c8dff5;border-radius:10px;padding:1rem 1.25rem;margin-bottom:1.5rem">'
-    +'<div style="font-size:13px;font-weight:600;color:#1a4a7a;margin-bottom:8px">下一步 Next Step</div>'
-    +'<div style="font-size:13px;color:#2a5a9a;line-height:1.8">'
-    +'1. 點擊上方「複製提示詞」按鈕 <span style="color:#7a9ac0">Click "Copy Prompt" above</span><br>'
-    +'2. 開啟 <strong>ChatGPT</strong>（chatgpt.com）或 <strong>Claude.ai</strong>，貼上提示詞並送出 <span style="color:#7a9ac0">Open ChatGPT or Claude.ai, paste and send</span><br>'
-    +'3. AI 將生成三個英文廣告版本，請選擇您偏好的版本 <span style="color:#7a9ac0">AI will generate three versions — select your preferred one</span><br>'
-    +'4. 回到本頁面，在下方記錄您的選擇並匯出結果 <span style="color:#7a9ac0">Return here to record your choice and export the result</span>'
-    +'</div>'
-    +'</div>'
-    +'<hr class="divider">'
-    +'<div class="slbl">Stage 3 — 記錄選擇結果 Record Your Selection</div>'
-    +'<div style="font-size:13px;color:#666;margin-bottom:14px">將 AI 生成的結果貼回後，請選擇您最偏好的版本編號，並匯出紀錄。<br><span style="color:#aaa">After reviewing the AI output, select the version number you preferred and export your record.</span></div>'
-    +'<div style="display:flex;gap:10px;margin-bottom:1rem">'
-    +'<button class="selbtn" id="sb0" onclick="choose(0)">版本 1 Version 1</button>'
-    +'<button class="selbtn" id="sb1" onclick="choose(1)">版本 2 Version 2</button>'
-    +'<button class="selbtn" id="sb2" onclick="choose(2)">版本 3 Version 3</button>'
-    +'</div>'
-    +'<div id="chosenNotice"></div>'
-    +'<button class="expbtn" id="expBtn" disabled onclick="exportFile()">匯出選擇結果 Export Result (.txt)</button>'
-    +'</div>';
-
-  btn.disabled=false;
-}
-
-function renderVersions(txt,out){
-  var blocks=txt.split('===VERSION_START===').slice(1);
-  var strategies=['情感共鳴改編','利益驅動表達','文化重新框架'];
-  var html='';
-  blocks.slice(0,3).forEach(function(blk,i){
-    var content=blk.split('===VERSION_END===')[0].trim();
-    var enMatch=content.match(/ENGLISH:\s*([\s\S]*?)(?=CHINESE_TRANSLATION:)/);
-    var zhMatch=content.match(/CHINESE_TRANSLATION:\s*([\s\S]*?)(?=BRIEF_EXPLANATION:)/);
-    var exMatch=content.match(/BRIEF_EXPLANATION:\s*([\s\S]*?)$/);
-    var enText=enMatch?enMatch[1].trim():'';
-    var zhText=zhMatch?zhMatch[1].trim():'';
-    var exText=exMatch?exMatch[1].trim():'';
-    var enSents=enText.split(/(?<=[.!?])\s+/).filter(function(s){return s.trim()});
-    var zhSents=zhText.split(/(?<=[。！？])/).filter(function(s){return s.trim()});
-    var pairsHtml='';
-    var max=Math.max(enSents.length,zhSents.length);
-    for(var k=0;k<max;k++){
-      var en=enSents[k]||'';var zh=zhSents[k]||'';
-      if(en||zh){
-        pairsHtml+='<div class="sent-pair">';
-        if(en)pairsHtml+='<div class="sent-en">'+en+'</div>';
-        if(zh)pairsHtml+='<div class="sent-zh">'+zh+'</div>';
-        pairsHtml+='</div>';
-      }
-    }
-    _versions.push({en:enText,zh:zhText,expl:exText,strategy:strategies[i]});
-    html+='<div class="vcard" id="vc'+i+'">';
-    html+='<div class="vhdr"><span class="vtag">版本 '+(i+1)+'</span><span class="vstrat">'+strategies[i]+'</span></div>';
-    html+=pairsHtml;
-    if(exText)html+='<div class="expl-box"><div class="expl-ttl">創意說明</div>'+exText+'</div>';
-    html+='<div class="sel-row"><button class="selbtn" id="sb'+i+'" onclick="choose('+i+')">選擇此版本</button></div>';
-    html+='</div>';
-  });
-  var loading=out.querySelector('.loading');
-  if(loading)loading.outerHTML=html;
-  out.insertAdjacentHTML('beforeend','<button class="expbtn" id="expBtn" disabled onclick="exportFile()">匯出我的選擇結果（.txt）</button><div id="chosenNotice"></div>');
-}
-
-function cpyPrompt(){
-  if(!_prompt)return;
-  navigator.clipboard.writeText(_prompt).then(function(){
-    var b=document.getElementById('cpyBtn');
-    if(b){b.textContent='已複製！Copied!';setTimeout(function(){b.textContent='複製提示詞 Copy Prompt'},2000);}
-  });
-}
-
-function choose(i){
-  _chosen=i;
-  for(var k=0;k<3;k++){
-    var sb=document.getElementById('sb'+k);
-    if(!sb)continue;
-    if(k===i){sb.textContent='✓ 已選擇 版本'+(i+1)+' Version '+(i+1);sb.classList.add('chosen');}
-    else{
-      var labels=['版本 1 Version 1','版本 2 Version 2','版本 3 Version 3'];
-      sb.textContent=labels[k];sb.classList.remove('chosen');
-    }
+// ── Navigation ──
+function goToStage(n) {
+  if (n >= 2 && !assembledPromptText) {
+    alert('請先填寫必填欄位並點選「組裝提示詞」。\nPlease complete Stage 1 and assemble the prompt first.');
+    return;
   }
-  var eb=document.getElementById('expBtn');
-  if(eb)eb.disabled=false;
-  var notice=document.getElementById('chosenNotice');
-  if(notice)notice.innerHTML='<div class="chosen-notice" style="margin-bottom:12px">已選擇版本 '+(i+1)+'。請點擊下方按鈕匯出結果，並將檔案傳送給研究人員。<br><span style="font-weight:400;font-size:12px">Version '+(i+1)+' selected. Click below to export and send the file to the researcher.</span></div>';
+  document.getElementById('panel-' + currentStage).classList.remove('active');
+  var prevNav = document.getElementById('nav-' + currentStage);
+  prevNav.classList.remove('active');
+  if (currentStage < n) prevNav.classList.add('completed');
+  currentStage = n;
+  document.getElementById('panel-' + n).classList.add('active');
+  document.getElementById('nav-' + n).classList.add('active');
+  window.scrollTo(0, 0);
 }
 
-function exportFile(){
-  if(_chosen<0)return;
-  var d=_data;
-  var lines=[];
-  lines.push('=== 廣告文案創意翻譯工具 — 實驗記錄 Transcreation Tool — Research Record ===');
-  lines.push('記錄時間 Timestamp：'+_ts);
-  lines.push('');
-  lines.push('【Stage 1 填寫資料 Input Data】');
-  lines.push('原始文案 Source text：'+d.src);
-  lines.push('目標市場 Target market：'+d.mkt);
-  lines.push('品牌語調 Brand tone：'+d.tones.join('、'));
-  lines.push('需避免語調 Tones to avoid：'+(d.avoids.length?d.avoids.join('、'):'無 None'));
-  lines.push('目標受眾年齡層 Audience：'+d.audAge);
-  lines.push('英語理解程度 Language level：'+d.audLang);
-  lines.push('核心價值觀 Values：'+(d.audVal||'未填 Not provided'));
-  lines.push('文化融入元素 Cultural elements：'+(d.cultIn||'未填 Not provided'));
-  lines.push('文化禁忌 Cultural taboos：'+(d.cultAv||'未填 Not provided'));
-  lines.push('文化語域 Cultural register：'+(d.cultReg||'未選 Not selected'));
-  lines.push('核心訊息 Key message：'+d.key);
-  lines.push('');
-  lines.push('【Stage 3 選擇結果 Version Selected】');
-  lines.push('選擇版本 Selected version：版本 '+(_chosen+1)+' Version '+(_chosen+1));
-  lines.push('');
-  lines.push('【Stage 2 系統組裝提示詞 Assembled Prompt】');
-  lines.push(_prompt);
-  var blob=new Blob([lines.join('\n')],{type:'text/plain;charset=utf-8'});
-  var url=URL.createObjectURL(blob);
-  var a=document.createElement('a');
-  a.href=url;
-  a.download='transcreation_'+_ts.replace(/[/: ]/g,'-')+'.txt';
+// ── Validation ──
+function validateField(num) {
+  var filled = false;
+  switch(num) {
+    case 1:
+      var v = document.getElementById('f1-source').value.trim();
+      filled = v.length > 0;
+      fieldValues[1] = v;
+      break;
+    case 2:
+      var cat = document.getElementById('f2-category').value;
+      if (cat === 'other') {
+        var ov = document.getElementById('f2-other').value.trim();
+        filled = ov.length > 0;
+        fieldValues[2] = ov;
+      } else {
+        filled = cat.length > 0;
+        fieldValues[2] = cat;
+      }
+      break;
+    case 3:
+      var amin = document.getElementById('f3-age-min').value.trim();
+      var amax = document.getElementById('f3-age-max').value.trim();
+      var mkt = document.getElementById('f3-market').value;
+      filled = (amin.length > 0 || amax.length > 0) && mkt.length > 0;
+      var ageStr = (amin && amax) ? amin + '–' + amax + ' 歲' : (amin ? amin + ' 歲以上' : (amax ? amax + ' 歲以下' : ''));
+      var motiv = document.getElementById('f3-motivation').value.trim();
+      fieldValues[3] = [ageStr, mkt, motiv].filter(Boolean).join('，');
+      break;
+    case 4:
+      var tones = getSelectedTones();
+      filled = tones.length > 0;
+      fieldValues[4] = tones.join('、');
+      break;
+    case 5:
+      filled = true;
+      fieldValues[5] = document.getElementById('f5-culture').value.trim() || '（未填寫）';
+      break;
+    case 6:
+      filled = document.getElementById('f6-brandname').value.length > 0;
+      fieldValues[6] = document.getElementById('f6-brandname').value;
+      break;
+  }
+  var dot = document.getElementById('dot-' + num);
+  dot.className = 'dot ' + (num === 5 || filled ? 'filled' : 'empty');
+}
+
+function getSelectedTones() {
+  var tones = [];
+  document.querySelectorAll('#f4-tones .cb-pill.checked').forEach(function(el) {
+    var hidden = el.querySelector('span[style*="none"]');
+    if (hidden) tones.push(hidden.textContent.trim());
+  });
+  return tones;
+}
+
+// ── Tone checkboxes ──
+function toggleTone(el) {
+  el.classList.toggle('checked');
+  validateField(4);
+}
+
+// ── Other category ──
+function toggleOtherCategory() {
+  var v = document.getElementById('f2-category').value;
+  document.getElementById('other-category-box').style.display = v === 'other' ? 'block' : 'none';
+  validateField(2);
+}
+
+// ── Brand name radio ──
+function selectBrandName(type, el) {
+  document.querySelectorAll('.radio-pill').forEach(function(r) { r.classList.remove('selected'); });
+  el.classList.add('selected');
+  document.getElementById('bn-specify-box').style.display = type === 'specify' ? 'block' : 'none';
+  updateBrandNameValue(type);
+}
+
+function updateBrandNameValue(type) {
+  var selected = document.querySelector('.radio-pill.selected');
+  if (!selected) return;
+  var t = selected.id.replace('bn-', '');
+  var val = '';
+  if (t === 'keep') val = '品牌名稱與專有名詞保留原文（不翻譯）';
+  else if (t === 'translate') val = '品牌名稱與專有名詞請翻譯為自然的英文';
+  else if (t === 'specify') {
+    var d = document.getElementById('f6-brandname-detail').value.trim();
+    val = d ? '品牌名稱指定翻譯：' + d : '';
+  }
+  document.getElementById('f6-brandname').value = val;
+  validateField(6);
+}
+
+// ── Assemble prompt ──
+function assemblePrompt() {
+  [1,2,3,4,5,6].forEach(function(n) { validateField(n); });
+
+  var missing = [];
+  if (!fieldValues[1]) missing.push('欄位 1：原文廣告文案');
+  if (!fieldValues[2]) missing.push('欄位 2：產品類別');
+  if (!fieldValues[3]) missing.push('欄位 3：目標受眾（年齡層與市場地區）');
+  if (!fieldValues[4]) missing.push('欄位 4：品牌語氣（至少選 1 項）');
+  if (!fieldValues[6]) missing.push('欄位 6：品牌名稱處理方式');
+
+  if (missing.length > 0) {
+    alert('請完成以下必填欄位後再繼續：\n\n' + missing.join('\n'));
+    return;
+  }
+
+  var prompt = 'You are an expert advertising transcreation specialist with deep knowledge of both Chinese and English marketing communication. Your task is to transcreate the following Chinese advertising copy into English, producing three distinct versions that each balance creative effectiveness with cultural appropriateness.\n\n';
+  prompt += '---\n';
+  prompt += 'SOURCE TEXT (原文):\n' + fieldValues[1] + '\n\n';
+  prompt += '---\n';
+  prompt += 'PRODUCT CATEGORY (產品類別): ' + fieldValues[2] + '\n\n';
+  prompt += 'TARGET AUDIENCE (目標受眾): ' + fieldValues[3] + '\n\n';
+  prompt += 'BRAND TONE (品牌語氣): ' + fieldValues[4] + '\n\n';
+  prompt += 'CULTURAL NOTES (文化注意事項): ' + fieldValues[5] + '\n\n';
+  prompt += 'BRAND NAME HANDLING (品牌名稱處理): ' + fieldValues[6] + '\n\n';
+  prompt += '---\n';
+  prompt += 'INSTRUCTIONS:\n\n';
+  prompt += 'Produce exactly THREE English transcreation versions. Each version must:\n';
+  prompt += '1. Preserve the emotional appeal and persuasive intent of the source text\n';
+  prompt += '2. Be culturally appropriate and natural-sounding for the target market\n';
+  prompt += '3. Maintain the specified brand tone throughout\n';
+  prompt += '4. Respect the cultural notes and brand name instructions above\n\n';
+  prompt += 'Format your output exactly as shown below. Use the section headers and separators as written — do not add extra commentary before or after.\n\n';
+  prompt += '════════════════════════════════\n';
+  prompt += '【VERSION 1】\n';
+  prompt += '════════════════════════════════\n';
+  prompt += '📌 English Copy:\n';
+  prompt += '[Write the transcreated English advertising copy here]\n\n';
+  prompt += '📋 Explanation:\n';
+  prompt += '(1) Cultural appropriateness — [How cultural elements are adapted for the target market]\n';
+  prompt += '(2) Emotional & persuasive impact — [How the emotional appeal and persuasion are preserved]\n';
+  prompt += '(3) Brand consistency — [How the specified brand tone is maintained]\n';
+  prompt += '(4) Creative equivalence — [How creative devices from the source are recreated or substituted]\n';
+  prompt += '(5) Target audience fit — [How this version addresses the target audience\'s expectations]\n\n';
+  prompt += '════════════════════════════════\n';
+  prompt += '【VERSION 2】\n';
+  prompt += '════════════════════════════════\n';
+  prompt += '📌 English Copy:\n';
+  prompt += '[Write the transcreated English advertising copy here]\n\n';
+  prompt += '📋 Explanation:\n';
+  prompt += '(1) Cultural appropriateness — [...]\n';
+  prompt += '(2) Emotional & persuasive impact — [...]\n';
+  prompt += '(3) Brand consistency — [...]\n';
+  prompt += '(4) Creative equivalence — [...]\n';
+  prompt += '(5) Target audience fit — [...]\n\n';
+  prompt += '════════════════════════════════\n';
+  prompt += '【VERSION 3】\n';
+  prompt += '════════════════════════════════\n';
+  prompt += '📌 English Copy:\n';
+  prompt += '[Write the transcreated English advertising copy here]\n\n';
+  prompt += '📋 Explanation:\n';
+  prompt += '(1) Cultural appropriateness — [...]\n';
+  prompt += '(2) Emotional & persuasive impact — [...]\n';
+  prompt += '(3) Brand consistency — [...]\n';
+  prompt += '(4) Creative equivalence — [...]\n';
+  prompt += '(5) Target audience fit — [...]\n\n';
+  prompt += 'Produce all three versions now. Do not add any preamble or closing remarks.';
+
+  assembledPromptText = prompt;
+  document.getElementById('assembled-prompt').textContent = prompt;
+  goToStage(2);
+}
+
+// ── Copy ──
+function copyPrompt() {
+  var fallback = function() {
+    var ta = document.createElement('textarea');
+    ta.value = assembledPromptText;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+  };
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(assembledPromptText).catch(fallback);
+    } else { fallback(); }
+  } catch(e) { fallback(); }
+  var s = document.getElementById('copy-success');
+  s.style.display = 'inline';
+  setTimeout(function() { s.style.display = 'none'; }, 2500);
+}
+
+// ── Version selection ──
+function selectVersion(n) {
+  selectedVersion = n;
+  [1,2,3].forEach(function(i) { document.getElementById('sel-v' + i).classList.remove('selected'); });
+  document.getElementById('sel-v' + n).classList.add('selected');
+  updateExportSummary();
+}
+
+function updateExportSummary() {
+  var hasOutput = document.getElementById('all-output').value.trim().length > 0;
+  var selText = selectedVersion ? 'Version ' + selectedVersion + ' 已選定' : '尚未選擇版本';
+  var summary = document.getElementById('export-summary');
+  var sumText = document.getElementById('export-summary-text');
+  if (hasOutput || selectedVersion) {
+    summary.style.display = 'block';
+    sumText.textContent = (hasOutput ? 'AI 結果已貼入' : '尚未貼入結果') + ' · ' + selText;
+  }
+}
+
+// ── Export ──
+function exportRecord() {
+  var now = new Date();
+  var ts = now.toISOString().replace('T', ' ').slice(0, 19);
+  var dateStr = now.toLocaleDateString('zh-TW', {year:'numeric', month:'2-digit', day:'2-digit'});
+  var allOutput = document.getElementById('all-output').value.trim();
+  var reason = document.getElementById('sel-reason').value.trim();
+
+  var lines = [
+    '================================================================',
+    '廣告文案創意翻譯工具 · Advertising Transcreation Tool',
+    '會話記錄 Session Record',
+    '生成時間 Generated: ' + ts,
+    '================================================================',
+    '',
+    '[STAGE 1 — 品牌資訊輸入]',
+    '',
+    '欄位 1 原文文案:',
+    fieldValues[1] || '（未填寫）',
+    '',
+    '欄位 2 產品類別:',
+    fieldValues[2] || '（未填寫）',
+    '',
+    '欄位 3 目標受眾:',
+    fieldValues[3] || '（未填寫）',
+    '',
+    '欄位 4 品牌語氣:',
+    fieldValues[4] || '（未填寫）',
+    '',
+    '欄位 5 文化注意事項:',
+    fieldValues[5],
+    '',
+    '欄位 6 品牌名稱處理:',
+    fieldValues[6] || '（未填寫）',
+    '',
+    '================================================================',
+    '',
+    '[STAGE 2 — 組裝提示詞]',
+    '',
+    assembledPromptText || '（尚未組裝）',
+    '',
+    '================================================================',
+    '',
+    '[STAGE 3 — AI 生成結果]',
+    '',
+    allOutput || '（未貼入）',
+    '',
+    '================================================================',
+    '',
+    '[版本選擇]',
+    '',
+    '選擇版本: ' + (selectedVersion ? 'Version ' + selectedVersion : '（未選擇）'),
+    '',
+    '選擇理由:',
+    reason || '（未填寫）',
+    '',
+    '================================================================',
+    '記錄結束 End of Record · ' + dateStr,
+    '================================================================'
+  ];
+
+  var record = lines.join('\n');
+  var blob = new Blob([record], {type: 'text/plain;charset=utf-8'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'transcreation_record_' + now.toISOString().slice(0,10) + '.txt';
+  document.body.appendChild(a);
   a.click();
+  document.body.removeChild(a);
   URL.revokeObjectURL(url);
+  updateExportSummary();
 }
-
-upd();
 </script>
 </body>
 </html>
