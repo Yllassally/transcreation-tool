@@ -367,6 +367,37 @@
     border-top: 1px solid var(--border);
     margin: 20px 0;
   }
+
+  /* Parsed preview box */
+  .parsed-preview {
+    margin-top: 8px;
+    padding: 10px 14px;
+    background: var(--gray-light);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  .parsed-preview .copy-text {
+    font-style: italic;
+    margin-bottom: 6px;
+    color: var(--gray-dark);
+  }
+  .parsed-preview .summary-en {
+    color: var(--gray-dark);
+    font-size: 12.5px;
+  }
+  .parsed-preview .summary-zh {
+    color: var(--teal-dark);
+    font-size: 12.5px;
+    font-weight: 600;
+  }
+  .parsed-preview .hidden-note {
+    font-size: 11px;
+    color: var(--text-sub);
+    margin-top: 6px;
+    font-style: italic;
+  }
 </style>
 </head>
 <body>
@@ -591,17 +622,25 @@
         </div>
 
         <div class="section-title">貼入 AI 生成結果 Paste AI-Generated Versions</div>
+        <div class="info-box" style="margin-bottom:16px;font-size:12px;">
+          請將 AI 生成的完整內容（含 FULL ANALYSIS）貼入下方欄位。工具會自動擷取文案摘要顯示於介面，完整分析將保存於匯出記錄中。<br>
+          Paste the complete AI output (including FULL ANALYSIS). The tool will display only the copy and summaries; the full analysis is saved in the export record.
+        </div>
+
         <div class="version-paste-area">
-          <label>Version 1</label>
-          <textarea id="v1-output" rows="5" placeholder="將 AI 生成的 Version 1 完整內容貼入此處（包含文案、English summary、Chinese summary、FULL ANALYSIS）" oninput="updateExportSummary()"></textarea>
+          <label>Version 1 — 貼入完整內容 Paste full output</label>
+          <textarea id="v1-output" rows="5" placeholder="將 AI 生成的 Version 1 完整內容貼入此處（文案 + English summary + Chinese summary + FULL ANALYSIS）" oninput="parseVersion(1)"></textarea>
+          <div class="parsed-preview" id="v1-preview" style="display:none;"></div>
         </div>
         <div class="version-paste-area">
-          <label>Version 2</label>
-          <textarea id="v2-output" rows="5" placeholder="將 AI 生成的 Version 2 完整內容貼入此處" oninput="updateExportSummary()"></textarea>
+          <label>Version 2 — 貼入完整內容 Paste full output</label>
+          <textarea id="v2-output" rows="5" placeholder="將 AI 生成的 Version 2 完整內容貼入此處" oninput="parseVersion(2)"></textarea>
+          <div class="parsed-preview" id="v2-preview" style="display:none;"></div>
         </div>
         <div class="version-paste-area">
-          <label>Version 3</label>
-          <textarea id="v3-output" rows="5" placeholder="將 AI 生成的 Version 3 完整內容貼入此處" oninput="updateExportSummary()"></textarea>
+          <label>Version 3 — 貼入完整內容 Paste full output</label>
+          <textarea id="v3-output" rows="5" placeholder="將 AI 生成的 Version 3 完整內容貼入此處" oninput="parseVersion(3)"></textarea>
+          <div class="parsed-preview" id="v3-preview" style="display:none;"></div>
         </div>
 
         <hr class="divider">
@@ -799,6 +838,50 @@ function copyPrompt() {
   var s = document.getElementById('copy-success');
   s.style.display = 'inline';
   setTimeout(function() { s.style.display = 'none'; }, 2500);
+}
+
+function parseVersion(n) {
+  var raw = document.getElementById('v' + n + '-output').value.trim();
+  var preview = document.getElementById('v' + n + '-preview');
+
+  if (!raw) {
+    preview.style.display = 'none';
+    updateExportSummary();
+    return;
+  }
+
+  // Split at FULL ANALYSIS
+  var splitIdx = raw.indexOf('FULL ANALYSIS:');
+  var displayPart = splitIdx > -1 ? raw.substring(0, splitIdx).trim() : raw;
+
+  // Extract English summary
+  var enMatch = displayPart.match(/English summary:\s*(.+)/i);
+  var enSummary = enMatch ? enMatch[1].trim() : '';
+
+  // Extract Chinese summary
+  var zhMatch = displayPart.match(/Chinese summary:\s*(.+)/i);
+  var zhSummary = zhMatch ? zhMatch[1].trim() : '';
+
+  // Extract copy (everything before English summary)
+  var copyEnd = displayPart.search(/English summary:/i);
+  var copyText = copyEnd > -1 ? displayPart.substring(0, copyEnd).trim() : displayPart;
+  // Remove version label if present
+  copyText = copyText.replace(/^\*?\*?Version\s*\d+:?\*?\*?\s*/i, '').trim();
+
+  // Build preview HTML
+  var html = '';
+  if (copyText) html += '<div class="copy-text">' + escapeHtml(copyText) + '</div>';
+  if (enSummary) html += '<div class="summary-en">🔹 ' + escapeHtml(enSummary) + '</div>';
+  if (zhSummary) html += '<div class="summary-zh">🔸 ' + escapeHtml(zhSummary) + '</div>';
+  if (splitIdx > -1) html += '<div class="hidden-note">✦ FULL ANALYSIS 已隱藏，將包含於匯出記錄 / Hidden from display, included in export</div>';
+
+  preview.innerHTML = html;
+  preview.style.display = html ? 'block' : 'none';
+  updateExportSummary();
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
 }
 
 function selectVersion(n) {
