@@ -453,7 +453,7 @@
         <div class="field-group">
           <label>2. 產品類別 Product Category <span class="req">●</span></label>
           <div class="field-hint">請選擇最符合您產品的類別。/ Select the category that best fits your product.</div>
-          <select id="f2" onchange="updateChecklist()">
+          <select id="f2" onchange="updateChecklist(); updateVariantFields()">
             <option value="">-- 請選擇 / Please select --</option>
             <option value="Food and Beverage (食品飲料)">食品飲料 / Food and Beverage</option>
             <option value="Health and Wellness (健康保健)">健康保健 / Health and Wellness</option>
@@ -547,6 +547,34 @@
               <div class="field-example">例 / e.g.: avoid exaggerated health claims, avoid references to specific body ideals</div>
             </div>
           </div>
+        </div>
+
+        <!-- Variant Extra Fields (shown conditionally based on product category) -->
+        <div id="variant-food" class="field-group" style="display:none;">
+          <label>5d. 理想生活形象 Ideal Lifestyle Image <span class="req">●</span> <span class="dim-tag">Cultural Appropriateness</span></label>
+          <div class="field-hint">請描述此產品在目標市場中應傳遞的生活方式形象。/ Describe the lifestyle image this product should convey in the target market.</div>
+          <textarea id="f-food-lifestyle" rows="2" placeholder="例：daily morning wellness ritual, active outdoor lifestyle" oninput="updateChecklist()"></textarea>
+          <div class="field-example">例 / e.g.: self-care morning routine, glow-from-within wellness culture</div>
+          <div style="margin-top:12px;">
+            <label>5e. 飲食禁忌或敏感事項 Dietary Taboos or Sensitivities to Avoid <span class="dim-tag">Cultural Appropriateness</span></label>
+            <div class="field-hint">請說明目標市場中應避免的飲食相關禁忌或敏感內容。/ Note any dietary taboos or sensitivities to avoid in the target market.</div>
+            <textarea id="f-food-taboo" rows="2" placeholder="例：avoid pork-derived ingredients reference, avoid claims implying medical effects" oninput="updateChecklist()"></textarea>
+            <div class="field-example">例 / e.g.: avoid references to alcohol, avoid exaggerated health claims</div>
+          </div>
+        </div>
+
+        <div id="variant-tech" class="field-group" style="display:none;">
+          <label>5d. 核心技術詞彙 Core Technical Vocabulary <span class="req">●</span> <span class="dim-tag">Brand Consistency</span></label>
+          <div class="field-hint">請列出必須在三個版本中一致出現的技術詞彙。/ List the technical terms that must appear consistently across all three versions.</div>
+          <textarea id="f-tech-vocab" rows="2" placeholder="例：heart rate variability, SpO2 sensor, always-on display" oninput="updateChecklist()"></textarea>
+          <div class="field-example">例 / e.g.: AMOLED display, 5G connectivity, AI-powered noise cancellation</div>
+        </div>
+
+        <div id="variant-apparel" class="field-group" style="display:none;">
+          <label>5d. 修辭風格指令 Rhetorical Instruction <span class="req">●</span> <span class="dim-tag">Creative Equivalence</span></label>
+          <div class="field-hint">請說明希望使用的英文修辭策略，引導模型追求語言等效而非字面翻譯。/ Specify the rhetorical strategies to pursue in English, guiding the model toward equivalence rather than literal transfer.</div>
+          <textarea id="f-apparel-rhetoric" rows="2" placeholder="例：use rhyme or rhythmic short sentences, favour metaphor over literal description, avoid mirroring Chinese sentence structure" oninput="updateChecklist()"></textarea>
+          <div class="field-example">例 / e.g.: use alliteration, pursue rhythmic flow, avoid calque of Chinese syntax</div>
         </div>
 
         <!-- Field 6: Brand Name Handling -->
@@ -675,6 +703,17 @@ var assembledPromptText = '';
 var selectedTones = [];
 var avoidTones = [];
 
+function updateVariantFields() {
+  var f2 = document.getElementById('f2').value;
+  var isFood = f2.indexOf('Food and Beverage') !== -1;
+  var isTech = f2.indexOf('Technology and Electronics') !== -1;
+  var isApparel = f2.indexOf('Apparel and Fashion') !== -1;
+  document.getElementById('variant-food').style.display = isFood ? 'block' : 'none';
+  document.getElementById('variant-tech').style.display = isTech ? 'block' : 'none';
+  document.getElementById('variant-apparel').style.display = isApparel ? 'block' : 'none';
+  updateChecklist();
+}
+
 document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('assemble-btn').addEventListener('click', assemblePrompt);
   document.getElementById('copy-btn').addEventListener('click', copyPrompt);
@@ -722,13 +761,20 @@ function updateChecklist() {
   var f5a = document.getElementById('f5a').value;
   var f5b = document.getElementById('f5b').value.trim();
   var f6 = document.getElementById('f6').value;
+  var isFood = f2.indexOf('Food and Beverage') !== -1;
+  var isTech = f2.indexOf('Technology and Electronics') !== -1;
+  var isApparel = f2.indexOf('Apparel and Fashion') !== -1;
+  var variantOk = true;
+  if (isFood) variantOk = document.getElementById('f-food-lifestyle').value.trim().length > 0;
+  if (isTech) variantOk = document.getElementById('f-tech-vocab').value.trim().length > 0;
+  if (isApparel) variantOk = document.getElementById('f-apparel-rhetoric').value.trim().length > 0;
 
   var checks = [
     f1.length > 0,
     f2.length > 0,
     f3b.length > 0 && f3c.length > 0,
     selectedTones.length > 0,
-    f5a.length > 0 && f5b.length > 0,
+    f5a.length > 0 && f5b.length > 0 && variantOk,
     f6.length > 0
   ];
 
@@ -752,6 +798,9 @@ function assemblePrompt() {
   var f5b = document.getElementById('f5b').value.trim();
   var f5c = document.getElementById('f5c').value.trim();
   var f6 = document.getElementById('f6').value;
+  var isFood = f2.indexOf('Food and Beverage') !== -1;
+  var isTech = f2.indexOf('Technology and Electronics') !== -1;
+  var isApparel = f2.indexOf('Apparel and Fashion') !== -1;
 
   var ageRange = (f3aMin && f3aMax) ? f3aMin + '–' + f3aMax + ' years old' : (f3aMin ? f3aMin + '+ years old' : 'Not specified');
   var toneStr = selectedTones.length > 0 ? selectedTones.join('; ') : 'Not specified';
@@ -773,6 +822,28 @@ function assemblePrompt() {
   prompt += 'CULTURAL NOTES (文化注意事項):\n';
   prompt += '- Local elements to incorporate: ' + f5b + '\n';
   prompt += '- Cultural taboos to avoid: ' + culturalTaboos + '\n\n';
+
+  if (isFood) {
+    var foodLifestyle = document.getElementById('f-food-lifestyle').value.trim();
+    var foodTaboo = document.getElementById('f-food-taboo').value.trim();
+    prompt += 'FOOD AND BEVERAGE VARIANT FIELDS:\n';
+    prompt += '- Ideal lifestyle image to convey: ' + (foodLifestyle || 'Not specified') + '\n';
+    prompt += '- Dietary taboos or sensitivities to avoid: ' + (foodTaboo || 'None specified') + '\n\n';
+    prompt += 'Prioritise cultural appropriateness and emotional and persuasive impact. Ensure lifestyle imagery resonates with the target market and that no dietary taboos are referenced.\n\n';
+  }
+  if (isTech) {
+    var techVocab = document.getElementById('f-tech-vocab').value.trim();
+    prompt += 'TECHNOLOGY VARIANT FIELDS:\n';
+    prompt += '- Core technical vocabulary (must appear consistently across all three versions): ' + (techVocab || 'Not specified') + '\n\n';
+    prompt += 'Prioritise brand consistency and target audience fit. The technical terms listed above must appear accurately and consistently in all three versions.\n\n';
+  }
+  if (isApparel) {
+    var apparelRhetoric = document.getElementById('f-apparel-rhetoric').value.trim();
+    prompt += 'APPAREL AND FASHION VARIANT FIELDS:\n';
+    prompt += '- Rhetorical instruction: ' + (apparelRhetoric || 'Not specified') + '\n\n';
+    prompt += 'Prioritise creative equivalence. Do not mirror the syntactic structure of the source text. Pursue rhetorical equivalence through target-language devices as specified above.\n\n';
+  }
+
   prompt += 'BRAND NAME HANDLING (品牌名稱處理): ' + f6 + '\n\n';
   prompt += '---\n\n';
   prompt += 'INSTRUCTIONS:\n\n';
