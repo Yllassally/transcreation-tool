@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>研究參與入口 | 北科大應用英文研究所</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --teal: #1D9E75;
+    --teal-light: #E1F5EE;
+    --teal-dark: #0F6E56;
+    --gray: #5F5E5A;
+    --gray-light: #F1EFE8;
+    --gray-border: #D3D1C7;
+    --text: #2C2C2A;
+    --text-muted: #888780;
+    --bg: #FAFAF8;
+    --white: #ffffff;
+    --radius: 10px;
+    --shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+
+  body {
+    font-family: -apple-system, "Noto Sans TC", "PingFang TC", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* Header */
+  .site-header {
+    background: var(--white);
+    border-bottom: 1px solid var(--gray-border);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .site-logo {
+    width: 38px; height: 38px;
+    background: var(--teal-light);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 600; color: var(--teal-dark);
+    line-height: 1.2; text-align: center; flex-shrink: 0;
+  }
+  .site-title { font-size: 14px; color: var(--text); line-height: 1.4; }
+  .site-title span { display: block; font-size: 12px; color: var(--text-muted); font-weight: 400; }
+
+  /* Progress bar */
+  .progress-bar {
+    background: var(--white);
+    border-bottom: 1px solid var(--gray-border);
+    padding: 0 24px;
+    display: flex;
+    overflow-x: auto;
+    gap: 0;
+  }
+  .progress-bar::-webkit-scrollbar { display: none; }
+  .step-tab {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    background: none;
+    border-top: none; border-left: none; border-right: none;
+    font-family: inherit;
+    transition: color 0.15s, border-color 0.15s;
+    position: relative;
+  }
+  .step-tab:hover { color: var(--text); }
+  .step-tab.active { color: var(--teal-dark); border-bottom-color: var(--teal); }
+  .step-tab.done { color: var(--teal); }
+  .step-num {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--gray-light);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 600;
+    flex-shrink: 0;
+    transition: background 0.15s, color 0.15s;
+  }
+  .step-tab.active .step-num { background: var(--teal); color: white; }
+  .step-tab.done .step-num { background: var(--teal-light); color: var(--teal-dark); }
+  .step-num.check::after { content: "✓"; }
+
+  /* Main content */
+  .main { max-width: 720px; margin: 0 auto; padding: 32px 24px 80px; }
+
+  /* Page panels */
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* Cards */
+  .card {
+    background: var(--white);
+    border: 1px solid var(--gray-border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow);
+  }
+  .card-title {
+    font-size: 17px; font-weight: 600;
+    margin-bottom: 8px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .card-icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    background: var(--teal-light);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .card p { font-size: 14px; color: var(--text-muted); line-height: 1.8; margin-top: 8px; }
+
+  /* Section label */
+  .section-label {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+    color: var(--text-muted); text-transform: uppercase;
+    margin-bottom: 12px; margin-top: 24px;
+  }
+
+  /* Video placeholder */
+  .video-box {
+    background: var(--gray-light);
+    border: 1px solid var(--gray-border);
+    border-radius: var(--radius);
+    aspect-ratio: 16/9;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 8px; color: var(--text-muted);
+    font-size: 14px; margin-bottom: 16px;
+    overflow: hidden;
+  }
+  .video-box iframe { width: 100%; height: 100%; border: none; border-radius: var(--radius); }
+  .video-icon { font-size: 40px; opacity: 0.4; }
+
+  /* Info list */
+  .info-list { list-style: none; }
+  .info-list li {
+    font-size: 14px; line-height: 1.8;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--gray-light);
+    display: flex; gap: 10px; align-items: flex-start;
+  }
+  .info-list li:last-child { border-bottom: none; }
+  .info-list .dot { color: var(--teal); font-size: 16px; margin-top: 1px; flex-shrink: 0; }
+
+  /* Timeline */
+  .timeline { display: flex; flex-direction: column; gap: 0; }
+  .tl-item {
+    display: flex; gap: 16px; padding-bottom: 20px;
+    position: relative;
+  }
+  .tl-item:last-child { padding-bottom: 0; }
+  .tl-left { display: flex; flex-direction: column; align-items: center; width: 36px; flex-shrink: 0; }
+  .tl-dot {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--teal-light);
+    border: 2px solid var(--teal);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 600; color: var(--teal-dark);
+    flex-shrink: 0;
+    z-index: 1;
+  }
+  .tl-line {
+    width: 2px; background: var(--gray-border);
+    flex: 1; margin-top: 4px;
+  }
+  .tl-item:last-child .tl-line { display: none; }
+  .tl-content { padding-top: 4px; }
+  .tl-title { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+  .tl-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+  .tl-badge {
+    display: inline-block;
+    font-size: 11px; padding: 2px 8px;
+    border-radius: 20px; margin-top: 4px;
+    background: var(--teal-light); color: var(--teal-dark);
+    font-weight: 500;
+  }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 12px 24px;
+    border-radius: var(--radius);
+    font-size: 14px; font-weight: 500;
+    cursor: pointer; border: none;
+    font-family: inherit;
+    text-decoration: none;
+    transition: opacity 0.15s, transform 0.1s;
+  }
+  .btn:active { transform: scale(0.98); }
+  .btn-primary {
+    background: var(--teal); color: white;
+    width: 100%;
+  }
+  .btn-primary:hover { opacity: 0.9; }
+  .btn-outline {
+    background: var(--white); color: var(--teal-dark);
+    border: 1px solid var(--teal);
+    width: 100%;
+  }
+  .btn-outline:hover { background: var(--teal-light); }
+  .btn-nav {
+    display: flex; gap: 10px; margin-top: 24px;
+  }
+  .btn-nav .btn { flex: 1; }
+
+  /* Signature canvas */
+  .sig-canvas-wrap {
+    border: 1.5px solid var(--gray-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    position: relative;
+    background: white;
+    margin-bottom: 8px;
+  }
+  #sig-canvas { display: block; cursor: crosshair; touch-action: none; }
+  .sig-hint {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 13px; color: var(--text-muted);
+    pointer-events: none; text-align: center; line-height: 1.8;
+    transition: opacity 0.2s;
+  }
+
+  /* Form fields */
+  .field-group { margin-bottom: 14px; }
+  .field-label { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; display: block; }
+  .field-input {
+    width: 100%; padding: 10px 12px;
+    border: 1px solid var(--gray-border);
+    border-radius: 8px;
+    font-size: 14px; color: var(--text);
+    font-family: inherit;
+    background: white;
+    transition: border-color 0.15s;
+  }
+  .field-input:focus { outline: none; border-color: var(--teal); }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  /* Consent items */
+  .consent-list { list-style: none; }
+  .consent-list li {
+    font-size: 13px; line-height: 1.8; color: var(--text);
+    padding: 6px 0 6px 20px;
+    border-bottom: 1px solid var(--gray-light);
+    position: relative;
+  }
+  .consent-list li:last-child { border-bottom: none; }
+  .consent-list li::before {
+    content: "•"; color: var(--teal);
+    position: absolute; left: 4px;
+  }
+
+  /* Embed form */
+  .form-embed {
+    background: var(--gray-light);
+    border: 1px solid var(--gray-border);
+    border-radius: var(--radius);
+    padding: 32px 24px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-bottom: 16px;
+  }
+  .form-embed a {
+    color: var(--teal-dark);
+    font-weight: 500;
+    text-decoration: underline;
+  }
+  .form-link-box {
+    border: 1px solid var(--gray-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+  .form-link-box iframe { width: 100%; height: 600px; border: none; display: block; }
+
+  /* Tool embed */
+  .tool-frame {
+    border: 1px solid var(--gray-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+  .tool-frame iframe { width: 100%; height: 700px; border: none; display: block; }
+
+  /* Notice box */
+  .notice {
+    background: var(--teal-light);
+    border: 1px solid #9FE1CB;
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    font-size: 13px;
+    color: var(--teal-dark);
+    line-height: 1.7;
+    margin-bottom: 16px;
+    display: flex; gap: 10px;
+  }
+  .notice-icon { flex-shrink: 0; font-size: 16px; margin-top: 1px; }
+
+  /* Completion screen */
+  .completion {
+    text-align: center; padding: 56px 24px 40px;
+  }
+  .completion-icon { font-size: 72px; margin-bottom: 20px; }
+  .completion h2 { font-size: 26px; margin-bottom: 12px; font-weight: 600; }
+  .completion p { font-size: 15px; color: var(--text-muted); line-height: 2; }
+  .gift-badge {
+    display: inline-block;
+    margin-top: 24px;
+    background: var(--teal-light);
+    color: var(--teal-dark);
+    border: 1px solid #9FE1CB;
+    border-radius: 20px;
+    padding: 10px 28px;
+    font-size: 15px; font-weight: 600;
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-logo">北科<br>大</div>
+  <div class="site-title">
+    研究參與入口
+    <span>國立臺北科技大學 應用英文研究所</span>
+  </div>
+</header>
+
+<nav class="progress-bar" id="progress-bar">
+  <button class="step-tab active" onclick="goTo(0)">
+    <span class="step-num">1</span> 研究說明
+  </button>
+  <button class="step-tab" onclick="goTo(1)">
+    <span class="step-num">2</span> 同意書
+  </button>
+  <button class="step-tab" onclick="goTo(2)">
+    <span class="step-num">3</span> 前測問卷
+  </button>
+  <button class="step-tab" onclick="goTo(3)">
+    <span class="step-num">4</span> 使用工具
+  </button>
+  <button class="step-tab" onclick="goTo(4)">
+    <span class="step-num">5</span> 第一輪問卷
+  </button>
+  <button class="step-tab" onclick="goTo(5)">
+    <span class="step-num">6</span> 完成 & 等待通知
+  </button>
+</nav>
+
+<main class="main">
+
+  <!-- PANEL 0: 研究說明 -->
+  <div class="panel active" id="panel-0">
+    <div class="card">
+      <div class="card-title">
+        <div class="card-icon">👋</div>
+        歡迎參與本研究！
+      </div>
+      <p>感謝您撥出時間。這份研究希望了解 AI 工具能否幫助台灣中小企業輕鬆產出英文廣告文案，您的參與對我們非常重要。</p>
+    </div>
+
+    <div class="section-label">操作說明影片</div>
+    <div class="video-box" id="video-box">
+      <!-- 請將下方 YOUR_VIDEO_ID 替換成您的 YouTube 影片 ID -->
+      <!-- 例如影片網址為 https://youtu.be/abc123，就填 abc123 -->
+      <!-- <iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID" allowfullscreen></iframe> -->
+      <div class="video-icon">▶</div>
+      <span>影片準備中，即將上線</span>
+    </div>
+
+    <div class="section-label">參與流程總覽</div>
+    <div class="card">
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-left"><div class="tl-dot">1</div><div class="tl-line"></div></div>
+          <div class="tl-content">
+            <div class="tl-title">觀看說明影片，填寫同意書與前測問卷</div>
+            <div class="tl-desc">了解流程、確認參與意願，並提供背景資料</div>
+            <span class="tl-badge">約 10 分鐘</span>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-left"><div class="tl-dot">2</div><div class="tl-line"></div></div>
+          <div class="tl-content">
+            <div class="tl-title">第一輪：使用工具 → 上傳記錄檔 → 填問卷</div>
+            <div class="tl-desc">用工具為自己的產品生成英文廣告文案，填寫使用體驗評分</div>
+            <span class="tl-badge">約 30–40 分鐘</span>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-left"><div class="tl-dot" style="background:#F1EFE8; border-color:#B4B2A9; color:#5F5E5A;">⏳</div><div class="tl-line"></div></div>
+          <div class="tl-content">
+            <div class="tl-title">研究者修改工具</div>
+            <div class="tl-desc">您無需任何動作，研究者根據第一輪回饋調整工具後，會主動通知您進行第二輪</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-left"><div class="tl-dot">3</div><div class="tl-line"></div></div>
+          <div class="tl-content">
+            <div class="tl-title">第二輪：使用修改後的工具 → 上傳記錄檔 → 線上訪談</div>
+            <div class="tl-desc">再次使用工具，最後與研究者進行約 15–20 分鐘的線上對談</div>
+            <span class="tl-badge">約 30–40 分鐘</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">研究資訊</div>
+    <div class="card">
+      <ul class="info-list">
+        <li><span class="dot">●</span><div><strong>研究者：</strong>陳立佳（國立臺北科技大學 應用英文研究所）</div></li>
+        <li><span class="dot">●</span><div><strong>指導教授：</strong>陳雅玫博士</div></li>
+        <li><span class="dot">●</span><div><strong>聯絡信箱：</strong>revivalsally@gmail.com</div></li>
+        <li><span class="dot">●</span><div><strong>參與謝禮：</strong>完成兩輪測試與訪談後，提供 NT$300 星巴克或家樂福電子禮券（二選一）</div></li>
+        <li><span class="dot">●</span><div>參與完全出於自願，可在任何階段退出；謝禮需完成兩輪測試與訪談後方可領取</div></li>
+      </ul>
+    </div>
+
+    <div class="btn-nav">
+      <button class="btn btn-primary" onclick="goTo(1)">我已看完影片，繼續 →</button>
+    </div>
+  </div>
+
+  <!-- PANEL 1: 同意書 -->
+  <div class="panel" id="panel-1">
+    <div class="card">
+      <div class="card-title">
+        <div class="card-icon">📋</div>
+        知情同意書
+      </div>
+    </div>
+
+    <div class="section-label">研究說明與同意事項</div>
+    <div class="card">
+      <ul class="consent-list">
+        <li>本研究目的是測試一套協助台灣中小企業生成英文廣告文案的 AI 提示詞模板工具，成果用於學術論文撰寫。</li>
+        <li>參與流程包含兩輪工具測試，每輪需填寫問卷或接受線上訪談，預計每輪約 30–40 分鐘。</li>
+        <li>所蒐集之資料（問卷回答、工具操作記錄、訪談內容）僅供本研究學術分析使用，不對外公開。</li>
+        <li>論文中所有公司名稱及個人資料將以匿名代號處理。</li>
+        <li>參與完全出於自願，您可在任何階段退出，不需說明理由。</li>
+        <li>完成兩輪測試與訪談後，將提供 NT$300 星巴克或家樂福電子禮券（二選一）作為參與謝禮。</li>
+      </ul>
+    </div>
+
+    <div class="section-label">填寫參與者資料</div>
+    <div class="card">
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label" for="p-name">姓名</label>
+          <input class="field-input" id="p-name" type="text" placeholder="請填寫姓名">
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="p-date">日期</label>
+          <input class="field-input" id="p-date" type="date">
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label" for="p-company">公司 / 品牌名稱（可填代號）</label>
+          <input class="field-input" id="p-company" type="text" placeholder="例：A公司">
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="p-email">電子郵件</label>
+          <input class="field-input" id="p-email" type="email" placeholder="聯絡用信箱">
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">親筆簽名</div>
+    <div class="card">
+      <p style="font-size:13px; color:var(--text-muted); margin-bottom:12px; margin-top:0">請在下方空白處用滑鼠或手指簽名</p>
+      <div class="sig-canvas-wrap">
+        <canvas id="sig-canvas" width="640" height="120"></canvas>
+        <div class="sig-hint" id="sig-hint">✏️ 請在此簽名</div>
+      </div>
+      <button class="btn btn-outline" style="width:auto; padding:6px 16px; font-size:13px; margin-bottom:14px;" onclick="clearSig()">清除重簽</button>
+      <button class="btn btn-outline" onclick="downloadConsent()" style="margin-bottom:0">⬇ 下載同意書（請回傳給研究者）</button>
+    </div>
+
+    <div class="btn-nav">
+      <button class="btn btn-outline" onclick="goTo(0)">← 上一步</button>
+      <button class="btn btn-primary" onclick="goTo(2)">已下載並回傳，繼續 →</button>
+    </div>
+  </div>
+
+  <!-- PANEL 2: 前測問卷 -->
+  <div class="panel" id="panel-2">
+    <div class="card">
+      <div class="card-title">
+        <div class="card-icon">📝</div>
+        前測問卷
+      </div>
+      <p>請填寫以下問卷，協助研究者了解您的背景與現有英文行銷需求。約需 5–10 分鐘。</p>
+    </div>
+
+    <div class="notice">
+      <span class="notice-icon">💡</span>
+      <span>填寫完畢後，問卷會自動記錄，您不需要另外通知研究者。填完即可點「繼續」進入下一步。</span>
+    </div>
+
+    <div class="form-link-box">
+      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdcV1MdXga8iv4XYIR36nqhENe56xhmwPM50OgC-RajYJDZ0w/viewform?embedded=true" title="前測問卷"></iframe>
+    </div>
+    <div class="notice">
+      <span class="notice-icon">💡</span>
+      <span>如果問卷無法在此顯示，請直接點此連結填寫：<a href="https://forms.gle/psdBF23KJX6wz3gB9" target="_blank">開啟前測問卷</a></span>
+    </div>
+
+    <div class="btn-nav">
+      <button class="btn btn-outline" onclick="goTo(1)">← 上一步</button>
+      <button class="btn btn-primary" onclick="goTo(3)">已填寫完畢，繼續 →</button>
+    </div>
+  </div>
+
+  <!-- PANEL 3: 工具 -->
+  <div class="panel" id="panel-3">
+    <div class="card">
+      <div class="card-title">
+        <div class="card-icon">🛠</div>
+        使用廣告文案生成工具
+      </div>
+      <p>請使用以下工具為您的產品生成英文廣告文案。選擇您認為最適合的版本，並記得下載操作記錄檔（.txt）。</p>
+    </div>
+
+    <div class="notice">
+      <span class="notice-icon">📌</span>
+      <div>
+        <strong>操作完成後，請記得：</strong><br>
+        按工具右下角的「下載記錄」按鈕，將 .txt 檔案上傳至
+        <!-- 請替換成您的 Google Drive 資料夾連結 -->
+        <a href="#" target="_blank">指定雲端資料夾</a>，再回到這裡繼續。
+      </div>
+    </div>
+
+    <div class="tool-frame">
+      <iframe src="https://yllassally.github.io/transcreation-tool/" title="廣告文案生成工具"></iframe>
+    </div>
+
+    <div class="btn-nav">
+      <button class="btn btn-outline" onclick="goTo(2)">← 上一步</button>
+      <button class="btn btn-primary" onclick="goTo(4)">已下載並上傳記錄檔，繼續 →</button>
+    </div>
+  </div>
+
+  <!-- PANEL 4: Round 1 問卷 -->
+  <div class="panel" id="panel-4">
+    <div class="card">
+      <div class="card-title">
+        <div class="card-icon">⭐</div>
+        第一輪問卷
+      </div>
+      <p>請根據剛才使用工具的體驗填寫以下問卷。包含工具易用性與文案品質評分，約需 10 分鐘。</p>
+    </div>
+
+    <div class="notice">
+      <span class="notice-icon">💡</span>
+      <span>填寫完畢後，研究者會進行分析並修改工具，之後再通知您進行第二輪。</span>
+    </div>
+
+    <div class="notice">
+      <span class="notice-icon">📌</span>
+      <span>第一輪問卷含檔案上傳，需在新視窗開啟填寫。請點下方按鈕。</span>
+    </div>
+    <a class="btn btn-primary" href="https://docs.google.com/forms/d/e/1FAIpQLScYbu213j_G7bwf2074X0CTeTMNKLDYDVQp_Jehm9OfqE09GQ/viewform" target="_blank" style="margin-bottom:16px; text-decoration:none;">📋 開啟第一輪問卷</a>
+
+    <div class="btn-nav">
+      <button class="btn btn-outline" onclick="goTo(3)">← 上一步</button>
+      <button class="btn btn-primary" onclick="goTo(5)">已填寫完畢，繼續 →</button>
+    </div>
+  </div>
+
+  <!-- PANEL 5: 等待通知 -->
+  <div class="panel" id="panel-5">
+    <div class="completion">
+      <div class="completion-icon">🎉</div>
+      <h2>第一輪完成！非常感謝您！</h2>
+      <p>您已完成第一輪的所有步驟。<br>研究者將根據您的回饋調整工具，<br>並主動透過 LINE 或電子郵件與您聯繫，<br>邀請您進行第二輪測試。</p>
+      <div class="gift-badge">📬 請留意研究者的後續通知</div>
+    </div>
+
+    <div style="background:var(--white); border:1px solid var(--gray-border); border-radius:var(--radius); padding:20px; margin-top:24px; box-shadow:var(--shadow)">
+      <div style="font-size:11px;font-weight:600;letter-spacing:0.08em;color:var(--text-muted);text-transform:uppercase;margin-bottom:14px">廣告創意翻譯是什麼？What is advertising transcreation?</div>
+      <div style="display:flex;gap:10px;margin-bottom:8px">
+        <div style="flex:1;text-align:center;font-size:11px;font-weight:500;padding:3px 0;border-radius:6px;background:#FCEBEB;color:#A32D2D">直譯 Direct Translation</div>
+        <div style="flex:1;text-align:center;font-size:11px;font-weight:500;padding:3px 0;border-radius:6px;background:#E1F5EE;color:#0F6E56">創意翻譯 Transcreation</div>
+      </div>
+      <div style="display:flex;gap:10px;margin-bottom:14px">
+        <div style="flex:1;border-radius:10px;padding:14px;background:#FEF8F7;border:1px solid #F5C4B3">
+          <span style="display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;background:#FCEBEB;color:#A32D2D;margin-bottom:8px">機器翻譯</span>
+          <div style="font-size:12px;line-height:1.7;color:#2C2C2A;font-style:italic">"This product has the function of making your face become white and also smooth, recommend to use every day morning and evening two times."</div>
+          <div style="font-size:11px;color:#888780;margin-top:6px;line-height:1.6">（中文原意：本產品可使臉部變白光滑，建議每日早晚各使用一次）</div>
+        </div>
+        <div style="flex:1;border-radius:10px;padding:14px;background:#F4FCF8;border:1px solid #9FE1CB">
+          <span style="display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;background:#E1F5EE;color:#0F6E56;margin-bottom:8px">AdWhiz 創意翻譯</span>
+          <div style="font-size:12px;line-height:1.7;color:#2C2C2A;font-style:italic">"Wake up to radiant, porcelain-smooth skin. Formulated for twice-daily use — because your glow doesn't take days off."</div>
+          <div style="font-size:11px;color:#888780;margin-top:6px;line-height:1.6">（中文大意：每天早晚使用，喚醒光滑透亮肌膚——你的光采不需要休息）</div>
+        </div>
+      </div>
+      <div style="border-top:1px solid var(--gray-border);padding-top:12px;margin-bottom:12px">
+        <div style="font-size:11px;font-weight:500;letter-spacing:0.06em;color:var(--text-muted);margin-bottom:10px">再看一個例子 — 珍珠奶茶品牌</div>
+        <div style="display:flex;gap:8px;margin-bottom:8px;align-items:flex-start">
+          <span style="flex-shrink:0;font-size:11px;font-weight:600;padding:2px 10px;border-radius:20px;background:#FCEBEB;color:#A32D2D;margin-top:2px">直譯</span>
+          <div>
+            <div style="font-size:12px;line-height:1.7;color:#2C2C2A;font-style:italic">"Our bubble tea uses the best ingredients from Taiwan, the taste is very unique and special, welcome to come and experience."</div>
+            <div style="font-size:11px;color:#888780;margin-top:3px">（本店珍珠奶茶使用台灣最優質食材，口感獨特，歡迎蒞臨體驗）</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:flex-start">
+          <span style="flex-shrink:0;font-size:11px;font-weight:600;padding:2px 10px;border-radius:20px;background:#E1F5EE;color:#0F6E56;margin-top:2px">創意翻譯</span>
+          <div>
+            <div style="font-size:12px;line-height:1.7;color:#2C2C2A;font-style:italic">"Taiwan's finest — chewy pearls, rich milk tea, zero compromises. Come taste the obsession."</div>
+            <div style="font-size:11px;color:#888780;margin-top:3px">（台灣最好的——Q彈珍珠、濃郁奶茶，毫不妥協。來嚐一口就上癮的滋味）</div>
+          </div>
+        </div>
+      </div>
+      <div style="text-align:center;font-size:12px;color:var(--text-muted);line-height:1.9">
+        這就是 AdWhiz 研究在做的事 ✨<br>
+        This is exactly what the AdWhiz study is about.
+      </div>
+    </div>
+
+    <div class="card" style="margin-top: 16px;">
+      <ul class="info-list">
+        <li><span class="dot">●</span><div><strong>聯絡方式：</strong>研究者將主動聯繫，無需您等待或回報</div></li>
+        <li><span class="dot">●</span><div><strong>第二輪說明：</strong>第二輪工具與專屬連結，屆時研究者會另行提供</div></li>
+        <li><span class="dot">●</span><div><strong>有問題嗎？</strong>歡迎隨時聯絡研究者：revivalsally@gmail.com</div></li>
+        <li><span class="dot">●</span><div><strong>謝禮說明：</strong>完成兩輪測試與訪談後，將提供 NT$300 電子禮券（星巴克或家樂福，您選）</div></li>
+      </ul>
+    </div>
+
+    <div class="btn-nav">
+      <button class="btn btn-outline" onclick="goTo(4)">← 返回第一輪問卷</button>
+    </div>
+  </div>
+
+</main>
+
+<script>
+let currentStep = 0;
+const totalSteps = 6;
+
+function goTo(step) {
+  document.getElementById('panel-' + currentStep).classList.remove('active');
+  document.querySelectorAll('.step-tab')[currentStep].classList.remove('active');
+
+  currentStep = step;
+  document.getElementById('panel-' + currentStep).classList.add('active');
+  const tabs = document.querySelectorAll('.step-tab');
+  tabs.forEach((tab, i) => {
+    tab.classList.remove('active', 'done');
+    if (i < currentStep) tab.classList.add('done');
+    if (i === currentStep) tab.classList.add('active');
+  });
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Set today's date
+const dateInput = document.getElementById('p-date');
+if (dateInput) dateInput.value = new Date().toISOString().slice(0,10);
+
+// Signature canvas
+const canvas = document.getElementById('sig-canvas');
+const ctx = canvas.getContext('2d');
+const hint = document.getElementById('sig-hint');
+let drawing = false, hasSig = false;
+
+ctx.strokeStyle = '#1a1a1a';
+ctx.lineWidth = 1.8;
+ctx.lineCap = 'round';
+ctx.lineJoin = 'round';
+
+function getPos(e) {
+  const r = canvas.getBoundingClientRect();
+  const scaleX = canvas.width / r.width;
+  const scaleY = canvas.height / r.height;
+  const src = e.touches ? e.touches[0] : e;
+  return { x: (src.clientX - r.left) * scaleX, y: (src.clientY - r.top) * scaleY };
+}
+
+canvas.addEventListener('mousedown', e => { drawing = true; const p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); hint.style.opacity='0'; hasSig=true; });
+canvas.addEventListener('mousemove', e => { if(!drawing) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); });
+canvas.addEventListener('mouseup', () => drawing = false);
+canvas.addEventListener('mouseleave', () => drawing = false);
+canvas.addEventListener('touchstart', e => { e.preventDefault(); drawing=true; const p=getPos(e); ctx.beginPath(); ctx.moveTo(p.x,p.y); hint.style.opacity='0'; hasSig=true; }, {passive:false});
+canvas.addEventListener('touchmove', e => { e.preventDefault(); if(!drawing) return; const p=getPos(e); ctx.lineTo(p.x,p.y); ctx.stroke(); }, {passive:false});
+canvas.addEventListener('touchend', () => drawing = false);
+
+function clearSig() { ctx.clearRect(0,0,canvas.width,canvas.height); hint.style.opacity='1'; hasSig=false; }
+
+function downloadConsent() {
+  const name = document.getElementById('p-name').value || '（未填）';
+  const date = document.getElementById('p-date').value || new Date().toISOString().slice(0,10);
+  const company = document.getElementById('p-company').value || '（未填）';
+
+  const w = 794, h = 980;
+  const oc = document.createElement('canvas');
+  oc.width = w; oc.height = h;
+  const c = oc.getContext('2d');
+
+  c.fillStyle = '#ffffff';
+  c.fillRect(0,0,w,h);
+
+  // Header bar
+  c.fillStyle = '#E1F5EE';
+  c.fillRect(0, 0, w, 70);
+  c.fillStyle = '#0F6E56';
+  c.font = '600 18px sans-serif';
+  c.fillText('研究參與知情同意書', 48, 28);
+  c.fillStyle = '#1D9E75';
+  c.font = '13px sans-serif';
+  c.fillText('國立臺北科技大學 應用英文研究所', 48, 50);
+
+  // Divider
+  c.strokeStyle = '#9FE1CB'; c.lineWidth = 1;
+  c.beginPath(); c.moveTo(48, 74); c.lineTo(w-48, 74); c.stroke();
+
+  // Research info
+  let y = 100;
+  const infoRows = [
+    ['研究者', '陳立佳 Li-Chia Chen'],
+    ['指導教授', '陳雅玫博士'],
+    ['聯絡信箱', 'revivalsally@gmail.com'],
+  ];
+  c.font = '13px sans-serif';
+  infoRows.forEach(([k,v]) => {
+    c.fillStyle = '#888780'; c.fillText(k, 48, y);
+    c.fillStyle = '#2C2C2A'; c.fillText(v, 160, y);
+    y += 22;
+  });
+  c.fillStyle = '#888780'; c.fillText('論文題目', 48, y);
+  c.fillStyle = '#2C2C2A'; c.font = '12px sans-serif';
+  c.fillText('從創意翻譯理論到提示詞模板框架：生成式AI輔助台灣中小企業廣告創意翻譯之設計研究', 48, y+18);
+  y += 46;
+
+  c.strokeStyle = '#D3D1C7'; c.lineWidth = 0.5;
+  c.beginPath(); c.moveTo(48,y); c.lineTo(w-48,y); c.stroke();
+  y += 20;
+
+  // Consent items
+  c.fillStyle = '#888780'; c.font = '11px sans-serif';
+  c.fillText('研究說明與同意事項', 48, y); y += 18;
+  const items = [
+    '1. 本研究目的是測試協助台灣中小企業生成英文廣告文案的 AI 提示詞模板工具，成果用於學術論文。',
+    '2. 參與流程包含兩輪工具測試，每輪需填寫問卷或接受線上訪談，預計每輪約 30–40 分鐘。',
+    '3. 所蒐集之資料僅供本研究學術分析使用，不對外公開。',
+    '4. 論文中所有公司名稱及個人資料將以匿名代號處理。',
+    '5. 參與完全出於自願，可在任何階段退出，不需說明理由。',
+    '6. 完成兩輪測試與訪談後，提供 NT$300 星巴克或家樂福電子禮券（二選一）作為參與謝禮。',
+  ];
+  c.fillStyle = '#2C2C2A'; c.font = '13px sans-serif';
+  items.forEach(line => { c.fillText(line, 48, y); y += 24; });
+
+  y += 10;
+  c.strokeStyle = '#D3D1C7'; c.lineWidth = 0.5;
+  c.beginPath(); c.moveTo(48,y); c.lineTo(w-48,y); c.stroke();
+  y += 24;
+
+  // Participant info
+  c.fillStyle = '#888780'; c.font = '11px sans-serif';
+  c.fillText('參與者資料', 48, y); y += 18;
+  [['姓名', name], ['公司／品牌', company], ['日期', date]].forEach(([k,v]) => {
+    c.fillStyle = '#888780'; c.font = '13px sans-serif'; c.fillText(k, 48, y);
+    c.fillStyle = '#2C2C2A'; c.fillText(v, 140, y);
+    y += 24;
+  });
+
+  y += 16;
+  c.fillStyle = '#888780'; c.font = '11px sans-serif';
+  c.fillText('親筆簽名', 48, y); y += 12;
+  c.strokeStyle = '#D3D1C7'; c.lineWidth = 0.5;
+  c.strokeRect(48, y, w-96, 120);
+
+  if(hasSig) {
+    c.drawImage(canvas, 48, y, w-96, 120);
+  } else {
+    c.fillStyle = '#B4B2A9'; c.font = '13px sans-serif';
+    c.fillText('（未簽名）', w/2-24, y+64);
+  }
+
+  y += 140;
+  c.strokeStyle = '#D3D1C7'; c.lineWidth = 0.5;
+  c.beginPath(); c.moveTo(48,y); c.lineTo(w-48,y); c.stroke();
+  y += 18;
+  c.fillStyle = '#B4B2A9'; c.font = '11px sans-serif';
+  c.fillText('請將此文件以電子郵件回傳至 revivalsally@gmail.com，或上傳至指定雲端資料夾。', 48, y);
+
+  const a = document.createElement('a');
+  a.download = `知情同意書_${name}_${date}.png`;
+  a.href = oc.toDataURL('image/png');
+  a.click();
+}
+</script>
+</body>
+</html>
