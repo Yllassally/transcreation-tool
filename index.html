@@ -36,14 +36,38 @@
   .header {
     background: var(--teal-dark);
     color: white;
-    padding: 20px 32px;
+    padding: 16px 32px;
     display: flex;
     align-items: center;
     gap: 16px;
   }
-  .header-icon { font-size: 28px; }
-  .header h1 { font-size: 18px; font-weight: 700; letter-spacing: 0.01em; }
-  .header p { font-size: 12px; opacity: 0.75; margin-top: 2px; }
+  .header-logo {
+    width: 44px; height: 44px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 800;
+    letter-spacing: -0.5px;
+    color: white;
+    flex-shrink: 0;
+    border: 1.5px solid rgba(255,255,255,0.25);
+  }
+  .header-brand { display: flex; flex-direction: column; gap: 1px; }
+  .header-adwhiz {
+    font-size: 22px; font-weight: 800;
+    letter-spacing: -0.5px;
+    color: white;
+    line-height: 1;
+  }
+  .header-adwhiz span {
+    color: #7FD9BC;
+  }
+  .header-subtitle {
+    font-size: 11px;
+    opacity: 0.7;
+    margin-top: 3px;
+    letter-spacing: 0.02em;
+  }
 
   /* Progress bar */
   .progress-bar {
@@ -404,10 +428,10 @@
 
 <!-- Header -->
 <div class="header">
-  <div class="header-icon">🌐</div>
-  <div>
-    <h1>廣告文案創意翻譯工具 | Advertising Transcreation Tool</h1>
-    <p>AI 輔助中英廣告創意翻譯 · AI-Assisted Chinese-English Advertising Transcreation</p>
+  <div class="header-logo">AW</div>
+  <div class="header-brand">
+    <div class="header-adwhiz">Ad<span>Whiz</span></div>
+    <div class="header-subtitle">AI-Assisted Advertising Transcreation · 廣告文案創意翻譯工具</div>
   </div>
 </div>
 
