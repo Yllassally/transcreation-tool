@@ -414,12 +414,16 @@
 
     <div class="section-label">操作說明影片</div>
     <div class="video-box" id="video-box">
-      <iframe id="yt-player"
-        src="https://www.youtube.com/embed/fa35J591bOo?enablejsapi=1&rel=0"
+      <iframe
+        src="https://www.youtube.com/embed/fa35J591bOo?rel=0&cc_load_policy=1"
         allowfullscreen
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
       </iframe>
     </div>
+    <label style="display:flex;align-items:center;gap:8px;margin-bottom:16px;cursor:pointer;font-size:13px;">
+      <input type="checkbox" id="video-watched" onchange="if(this.checked) unlockContinue()">
+      我已看完說明影片
+    </label>
 
     <div class="section-label">聯絡研究者</div>
     <div class="line-qr-box">
@@ -495,58 +499,26 @@
         <div class="card-icon">📋</div>
         知情同意書
       </div>
+      <p>請填寫以下知情同意書，填寫完畢後即可繼續下一步。</p>
     </div>
 
-    <div class="section-label">研究說明與同意事項</div>
-    <div class="card">
-      <ul class="consent-list">
-        <li>本研究目的是測試一套協助台灣中小企業生成英文廣告文案的 AI 提示詞模板工具，成果用於學術論文撰寫。</li>
-        <li>參與流程包含兩輪工具測試，每輪需填寫問卷或接受線上訪談，預計每輪約 30–40 分鐘。</li>
-        <li>所蒐集之資料（問卷回答、工具操作記錄、訪談內容）僅供本研究學術分析使用，不對外公開。</li>
-        <li>論文中所有公司名稱及個人資料將以匿名代號處理。</li>
-        <li>參與完全出於自願，您可在任何階段退出，不需說明理由。</li>
-        <li>完成兩輪測試與訪談後，將提供 NT$300 星巴克或家樂福電子禮券（二選一）作為參與謝禮。</li>
-      </ul>
+    <div class="notice">
+      <span class="notice-icon">💡</span>
+      <span>填寫完畢後，資料會自動記錄，您不需要另外通知研究者。填完即可點「繼續」進入下一步。</span>
     </div>
 
-    <div class="section-label">填寫參與者資料</div>
-    <div class="card">
-      <div class="field-row">
-        <div class="field-group">
-          <label class="field-label" for="p-name">姓名</label>
-          <input class="field-input" id="p-name" type="text" placeholder="請填寫姓名">
-        </div>
-        <div class="field-group">
-          <label class="field-label" for="p-date">日期</label>
-          <input class="field-input" id="p-date" type="date">
-        </div>
-      </div>
-      <div class="field-row">
-        <div class="field-group">
-          <label class="field-label" for="p-company">公司 / 品牌名稱（可填代號）</label>
-          <input class="field-input" id="p-company" type="text" placeholder="例：A公司">
-        </div>
-        <div class="field-group">
-          <label class="field-label" for="p-email">電子郵件</label>
-          <input class="field-input" id="p-email" type="email" placeholder="聯絡用信箱">
-        </div>
-      </div>
+    <div class="form-link-box">
+      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdZEuiwY73NEogX-lNUnKMjPUuSpKPqjL_20TOCcqrglHxuWA/viewform?embedded=true" title="知情同意書"></iframe>
     </div>
 
-    <div class="section-label">親筆簽名</div>
-    <div class="card">
-      <p style="font-size:13px; color:var(--text-muted); margin-bottom:12px; margin-top:0">請在下方空白處用滑鼠或手指簽名</p>
-      <div class="sig-canvas-wrap">
-        <canvas id="sig-canvas" width="640" height="120"></canvas>
-        <div class="sig-hint" id="sig-hint">✏️ 請在此簽名</div>
-      </div>
-      <button class="btn btn-outline" style="width:auto; padding:6px 16px; font-size:13px; margin-bottom:14px;" onclick="clearSig()">清除重簽</button>
-      <button class="btn btn-outline" onclick="downloadConsent()" style="margin-bottom:0">⬇ 下載同意書（請回傳給研究者）</button>
+    <div class="notice">
+      <span class="notice-icon">💡</span>
+      <span>如果問卷無法在此顯示，請直接點此連結填寫：<a href="https://docs.google.com/forms/d/e/1FAIpQLSdZEuiwY73NEogX-lNUnKMjPUuSpKPqjL_20TOCcqrglHxuWA/viewform" target="_blank">開啟知情同意書</a></span>
     </div>
 
     <div class="btn-nav">
       <button class="btn btn-outline" onclick="goTo(0)">← 上一步</button>
-      <button class="btn btn-primary" onclick="goTo(2)">已下載並回傳，繼續 →</button>
+      <button class="btn btn-primary" onclick="goTo(2)">已填寫完畢，繼續 →</button>
     </div>
   </div>
 
@@ -590,8 +562,12 @@
     </div>
 
     <div class="section-label">工具操作示範影片</div>
+    <div class="notice">
+      <span class="notice-icon">💡</span>
+      <span>以下為完整工具操作示範（約 5 分鐘），您可以全部看完，或直接開始使用工具，遇到問題再回來參考。</span>
+    </div>
     <div class="video-box">
-      <iframe src="https://www.youtube.com/embed/JVWqYeONx5A?rel=0"
+      <iframe src="https://www.youtube.com/embed/JVWqYeONx5A?rel=0&cc_load_policy=1"
         allowfullscreen
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
       </iframe>
@@ -722,20 +698,6 @@ function unlockContinue() {
   }
 }
 
-// YouTube IFrame API
-var tag = document.createElement('script');
-tag.src = 'https://www.youtube.com/iframe_api';
-document.head.appendChild(tag);
-
-var ytPlayer;
-function onYouTubeIframeAPIReady() {
-  ytPlayer = new YT.Player('yt-player', {
-    events: { 'onStateChange': function(e) {
-      if (e.data === YT.PlayerState.ENDED) unlockContinue();
-    }}
-  });
-}
-
 function goTo(step) {
   document.getElementById('panel-' + currentStep).classList.remove('active');
   document.querySelectorAll('.step-tab')[currentStep].classList.remove('active');
@@ -756,137 +718,7 @@ function goTo(step) {
 const dateInput = document.getElementById('p-date');
 if (dateInput) dateInput.value = new Date().toISOString().slice(0,10);
 
-// Signature canvas
-const canvas = document.getElementById('sig-canvas');
-const ctx = canvas.getContext('2d');
-const hint = document.getElementById('sig-hint');
-let drawing = false, hasSig = false;
 
-ctx.strokeStyle = '#1a1a1a';
-ctx.lineWidth = 1.8;
-ctx.lineCap = 'round';
-ctx.lineJoin = 'round';
-
-function getPos(e) {
-  const r = canvas.getBoundingClientRect();
-  const scaleX = canvas.width / r.width;
-  const scaleY = canvas.height / r.height;
-  const src = e.touches ? e.touches[0] : e;
-  return { x: (src.clientX - r.left) * scaleX, y: (src.clientY - r.top) * scaleY };
-}
-
-canvas.addEventListener('mousedown', e => { drawing = true; const p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); hint.style.opacity='0'; hasSig=true; });
-canvas.addEventListener('mousemove', e => { if(!drawing) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); });
-canvas.addEventListener('mouseup', () => drawing = false);
-canvas.addEventListener('mouseleave', () => drawing = false);
-canvas.addEventListener('touchstart', e => { e.preventDefault(); drawing=true; const p=getPos(e); ctx.beginPath(); ctx.moveTo(p.x,p.y); hint.style.opacity='0'; hasSig=true; }, {passive:false});
-canvas.addEventListener('touchmove', e => { e.preventDefault(); if(!drawing) return; const p=getPos(e); ctx.lineTo(p.x,p.y); ctx.stroke(); }, {passive:false});
-canvas.addEventListener('touchend', () => drawing = false);
-
-function clearSig() { ctx.clearRect(0,0,canvas.width,canvas.height); hint.style.opacity='1'; hasSig=false; }
-
-function downloadConsent() {
-  const name = document.getElementById('p-name').value || '（未填）';
-  const date = document.getElementById('p-date').value || new Date().toISOString().slice(0,10);
-  const company = document.getElementById('p-company').value || '（未填）';
-
-  const w = 794, h = 980;
-  const oc = document.createElement('canvas');
-  oc.width = w; oc.height = h;
-  const c = oc.getContext('2d');
-
-  c.fillStyle = '#ffffff';
-  c.fillRect(0,0,w,h);
-
-  // Header bar
-  c.fillStyle = '#E1F5EE';
-  c.fillRect(0, 0, w, 70);
-  c.fillStyle = '#0F6E56';
-  c.font = '600 18px sans-serif';
-  c.fillText('研究參與知情同意書', 48, 28);
-  c.fillStyle = '#1D9E75';
-  c.font = '13px sans-serif';
-  c.fillText('國立臺北科技大學 應用英文研究所', 48, 50);
-
-  // Divider
-  c.strokeStyle = '#9FE1CB'; c.lineWidth = 1;
-  c.beginPath(); c.moveTo(48, 74); c.lineTo(w-48, 74); c.stroke();
-
-  // Research info
-  let y = 100;
-  const infoRows = [
-    ['研究者', '陳立佳 Li-Chia Chen'],
-    ['指導教授', '陳雅玫博士'],
-    ['聯絡信箱', 'revivalsally@gmail.com'],
-  ];
-  c.font = '13px sans-serif';
-  infoRows.forEach(([k,v]) => {
-    c.fillStyle = '#888780'; c.fillText(k, 48, y);
-    c.fillStyle = '#2C2C2A'; c.fillText(v, 160, y);
-    y += 22;
-  });
-  c.fillStyle = '#888780'; c.fillText('論文題目', 48, y);
-  c.fillStyle = '#2C2C2A'; c.font = '12px sans-serif';
-  c.fillText('從創意翻譯理論到提示詞模板框架：生成式AI輔助台灣中小企業廣告創意翻譯之設計研究', 48, y+18);
-  y += 46;
-
-  c.strokeStyle = '#D3D1C7'; c.lineWidth = 0.5;
-  c.beginPath(); c.moveTo(48,y); c.lineTo(w-48,y); c.stroke();
-  y += 20;
-
-  // Consent items
-  c.fillStyle = '#888780'; c.font = '11px sans-serif';
-  c.fillText('研究說明與同意事項', 48, y); y += 18;
-  const items = [
-    '1. 本研究目的是測試協助台灣中小企業生成英文廣告文案的 AI 提示詞模板工具，成果用於學術論文。',
-    '2. 參與流程包含兩輪工具測試，每輪需填寫問卷或接受線上訪談，預計每輪約 30–40 分鐘。',
-    '3. 所蒐集之資料僅供本研究學術分析使用，不對外公開。',
-    '4. 論文中所有公司名稱及個人資料將以匿名代號處理。',
-    '5. 參與完全出於自願，可在任何階段退出，不需說明理由。',
-    '6. 完成兩輪測試與訪談後，提供 NT$300 星巴克或家樂福電子禮券（二選一）作為參與謝禮。',
-  ];
-  c.fillStyle = '#2C2C2A'; c.font = '13px sans-serif';
-  items.forEach(line => { c.fillText(line, 48, y); y += 24; });
-
-  y += 10;
-  c.strokeStyle = '#D3D1C7'; c.lineWidth = 0.5;
-  c.beginPath(); c.moveTo(48,y); c.lineTo(w-48,y); c.stroke();
-  y += 24;
-
-  // Participant info
-  c.fillStyle = '#888780'; c.font = '11px sans-serif';
-  c.fillText('參與者資料', 48, y); y += 18;
-  [['姓名', name], ['公司／品牌', company], ['日期', date]].forEach(([k,v]) => {
-    c.fillStyle = '#888780'; c.font = '13px sans-serif'; c.fillText(k, 48, y);
-    c.fillStyle = '#2C2C2A'; c.fillText(v, 140, y);
-    y += 24;
-  });
-
-  y += 16;
-  c.fillStyle = '#888780'; c.font = '11px sans-serif';
-  c.fillText('親筆簽名', 48, y); y += 12;
-  c.strokeStyle = '#D3D1C7'; c.lineWidth = 0.5;
-  c.strokeRect(48, y, w-96, 120);
-
-  if(hasSig) {
-    c.drawImage(canvas, 48, y, w-96, 120);
-  } else {
-    c.fillStyle = '#B4B2A9'; c.font = '13px sans-serif';
-    c.fillText('（未簽名）', w/2-24, y+64);
-  }
-
-  y += 140;
-  c.strokeStyle = '#D3D1C7'; c.lineWidth = 0.5;
-  c.beginPath(); c.moveTo(48,y); c.lineTo(w-48,y); c.stroke();
-  y += 18;
-  c.fillStyle = '#B4B2A9'; c.font = '11px sans-serif';
-  c.fillText('請將此文件以電子郵件回傳至 revivalsally@gmail.com，或上傳至指定雲端資料夾。', 48, y);
-
-  const a = document.createElement('a');
-  a.download = `知情同意書_${name}_${date}.png`;
-  a.href = oc.toDataURL('image/png');
-  a.click();
-}
 </script>
 </body>
 </html>
