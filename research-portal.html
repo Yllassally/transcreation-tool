@@ -175,7 +175,10 @@
   .line-qr-info strong { display: block; font-size: 14px; margin-bottom: 2px; }
   .line-qr-info span { color: var(--text-muted); font-size: 12px; }
 
-  /* Locked button */
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(5px); }
+  }
   .btn-locked {
     background: var(--gray-border) !important;
     color: var(--text-muted) !important;
@@ -516,13 +519,16 @@
       <span>如果問卷無法在此顯示，請直接點此連結填寫：<a href="https://docs.google.com/forms/d/e/1FAIpQLSdZEuiwY73NEogX-lNUnKMjPUuSpKPqjL_20TOCcqrglHxuWA/viewform" target="_blank">開啟知情同意書</a></span>
     </div>
 
+    <div style="background:#0F6E56;color:white;border-radius:12px;padding:16px 20px;margin-bottom:12px;text-align:center;">
+      <div style="font-size:22px;margin-bottom:6px;display:inline-block;animation:bounce 1s ease-in-out infinite;">⬇️</div>
+      <div style="font-weight:700;font-size:15px;">填完同意書後，請點下方按鈕繼續</div>
+      <div style="font-size:12px;opacity:0.85;margin-top:4px;">提交表單後即可點「已填寫完畢，繼續」</div>
+    </div>
     <div class="btn-nav">
       <button class="btn btn-outline" onclick="goTo(0)">← 上一步</button>
       <button class="btn btn-primary" onclick="goTo(2)">已填寫完畢，繼續 →</button>
     </div>
   </div>
-
-  <!-- PANEL 2: 前測問卷 -->
   <div class="panel" id="panel-2">
     <div class="card">
       <div class="card-title">
