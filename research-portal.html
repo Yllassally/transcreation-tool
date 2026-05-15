@@ -175,6 +175,10 @@
   .line-qr-info strong { display: block; font-size: 14px; margin-bottom: 2px; }
   .line-qr-info span { color: var(--text-muted); font-size: 12px; }
 
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
   @keyframes bounce {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(5px); }
@@ -407,6 +411,11 @@
 
   <!-- PANEL 0: 研究說明 -->
   <div class="panel active" id="panel-0">
+    <div style="text-align:center;margin-bottom:16px;">
+      <span style="font-size:24px;font-weight:700;color:#D0021B;display:inline-block;animation:pulse 1.2s ease-in-out infinite;">
+        ⚠️ 建議使用電腦或筆記型電腦進行，以確保最佳顯示效果
+      </span>
+    </div>
     <div class="card">
       <div class="card-title">
         <div class="card-icon">👋</div>
@@ -573,7 +582,7 @@
       <span>以下為完整工具操作示範（約 5 分鐘），您可以全部看完，或直接開始使用工具，遇到問題再回來參考。</span>
     </div>
     <div class="video-box">
-      <iframe src="https://www.youtube.com/embed/JVWqYeONx5A?rel=0&cc_load_policy=1"
+      <iframe src="https://www.youtube.com/embed/1aaiL47-tdo?rel=0&cc_load_policy=1"
         allowfullscreen
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
       </iframe>
