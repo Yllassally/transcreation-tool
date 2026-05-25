@@ -336,12 +336,15 @@
 
   /* Tool embed */
   .tool-frame {
-    border: 1px solid var(--gray-border);
-    border-radius: var(--radius);
+    border-top: 1px solid var(--gray-border);
+    border-bottom: 1px solid var(--gray-border);
     overflow: hidden;
     margin-bottom: 16px;
+    margin-left: calc(-50vw + 50%);
+    margin-right: calc(-50vw + 50%);
+    width: 100vw;
   }
-  .tool-frame iframe { width: 100%; height: 700px; border: none; display: block; }
+  .tool-frame iframe { width: 100%; height: 90vh; border: none; display: block; }
 
   /* Notice box */
   .notice {
