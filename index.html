@@ -647,20 +647,65 @@
         <h2>提示詞組裝 · Assembled Prompt</h2>
       </div>
       <div class="card-body">
-        <div class="info-box">
-          <strong>操作說明：</strong>以下是根據您填入的資訊自動組裝的完整提示詞。請點選「複製提示詞」，然後貼入 ChatGPT 或其他 AI 工具，取得三個英文版本後返回 Stage 3。<br>
-          <strong>Instructions:</strong> The prompt below has been assembled from your inputs. Click "Copy Prompt", paste it into ChatGPT, then return here for Stage 3.
+        <!-- Step flow indicator -->
+        <div style="display:flex; align-items:stretch; gap:0; margin-bottom:20px; border:1px solid var(--border); border-radius:8px; overflow:hidden; background:white;">
+          <div style="flex:1; padding:14px 16px; background:var(--teal); color:white; text-align:center;">
+            <div style="font-size:22px; margin-bottom:4px;">📋</div>
+            <div style="font-weight:700; font-size:13px;">步驟 1</div>
+            <div style="font-size:12px; opacity:0.9; margin-top:2px;">複製提示詞<br>Copy Prompt</div>
+          </div>
+          <div style="display:flex; align-items:center; padding:0 6px; background:#f0f0ee; color:#aaa; font-size:22px;">▶</div>
+          <div style="flex:1; padding:14px 16px; background:#1a4a8a; color:white; text-align:center;">
+            <div style="font-size:22px; margin-bottom:4px;">🤖</div>
+            <div style="font-weight:700; font-size:13px;">步驟 2</div>
+            <div style="font-size:12px; opacity:0.9; margin-top:2px;">前往 ChatGPT<br>Go to ChatGPT</div>
+          </div>
+          <div style="display:flex; align-items:center; padding:0 6px; background:#f0f0ee; color:#aaa; font-size:22px;">▶</div>
+          <div style="flex:1; padding:14px 16px; background:#7a5c1e; color:white; text-align:center;">
+            <div style="font-size:22px; margin-bottom:4px;">⌨️</div>
+            <div style="font-weight:700; font-size:13px;">步驟 3</div>
+            <div style="font-size:12px; opacity:0.9; margin-top:2px;">貼上並送出<br>Paste &amp; Send</div>
+          </div>
+          <div style="display:flex; align-items:center; padding:0 6px; background:#f0f0ee; color:#aaa; font-size:22px;">▶</div>
+          <div style="flex:1; padding:14px 16px; background:#2e6b3e; color:white; text-align:center;">
+            <div style="font-size:22px; margin-bottom:4px;">↩️</div>
+            <div style="font-weight:700; font-size:13px;">步驟 4</div>
+            <div style="font-size:12px; opacity:0.9; margin-top:2px;">回到 Stage 3<br>Return here</div>
+          </div>
         </div>
+
         <div class="section-title">完整提示詞 Complete Prompt</div>
         <div class="prompt-box" id="assembled-prompt"></div>
-        <div class="btn-row">
-          <button class="btn btn-primary" id="copy-btn">📋 複製提示詞 Copy Prompt</button>
-          <span class="copy-success" id="copy-success">✓ 已複製 Copied!</span>
-          <button class="btn btn-outline" onclick="goToStage(1)">← 返回修改 Back</button>
+
+        <!-- Action buttons -->
+        <div style="display:flex; gap:12px; align-items:center; margin-top:16px; flex-wrap:wrap;">
+          <button class="btn btn-primary" id="copy-btn" style="font-size:14px; padding:12px 22px;">
+            📋 步驟 1：複製提示詞 Copy Prompt
+          </button>
+          <span class="copy-success" id="copy-success">✓ 已複製！Copied!</span>
         </div>
+
+        <!-- Arrow + ChatGPT button -->
+        <div id="chatgpt-step" style="display:none; margin-top:16px; padding:16px; background:#eef3fb; border:1.5px solid #88aadd; border-radius:8px;">
+          <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+            <div style="font-size:28px;">⬇️</div>
+            <div style="flex:1;">
+              <div style="font-weight:700; color:#1a4a8a; font-size:14px;">提示詞已複製！接下來：</div>
+              <div style="font-size:12.5px; color:#444; margin-top:3px;">點下方按鈕前往 ChatGPT，在對話框中按 <kbd style="background:#eee;border:1px solid #ccc;border-radius:3px;padding:1px 5px;font-size:11px;">Ctrl+V</kbd>（Mac: <kbd style="background:#eee;border:1px solid #ccc;border-radius:3px;padding:1px 5px;font-size:11px;">⌘V</kbd>）貼上，然後送出。</div>
+              <div style="font-size:12px; color:#666; margin-top:2px;">Click below to open ChatGPT, then paste with Ctrl+V (Mac: ⌘V) and send.</div>
+            </div>
+            <a href="https://chatgpt.com" target="_blank" rel="noopener"
+               style="display:inline-flex; align-items:center; gap:8px; background:#1a4a8a; color:white; padding:12px 20px; border-radius:6px; font-weight:700; font-size:14px; text-decoration:none; white-space:nowrap;">
+              🤖 步驟 2：前往 ChatGPT ↗
+            </a>
+          </div>
+        </div>
+
         <hr class="divider">
         <div class="section-title">完成 AI 生成後，進入 Stage 3</div>
-        <button class="btn btn-primary" onclick="goToStage(3)" style="margin-top:6px;">▶ 進入版本選擇與記錄 Go to Stage 3</button>
+        <div style="font-size:12.5px; color:var(--text-sub); margin-top:4px; margin-bottom:8px;">取得 ChatGPT 的三個版本後，回到這裡繼續。/ After getting the three versions from ChatGPT, return here to continue.</div>
+        <button class="btn btn-primary" onclick="goToStage(3)" style="margin-top:6px;">▶ 步驟 4：進入版本選擇與記錄 Go to Stage 3</button>
+        <button class="btn btn-outline" onclick="goToStage(1)" style="margin-top:6px; margin-left:8px;">← 返回修改 Back</button>
       </div>
     </div>
   </div>
@@ -936,6 +981,8 @@ function copyPrompt() {
   var s = document.getElementById('copy-success');
   s.style.display = 'inline';
   setTimeout(function() { s.style.display = 'none'; }, 2500);
+  var chatgptStep = document.getElementById('chatgpt-step');
+  if (chatgptStep) { chatgptStep.style.display = 'block'; }
 }
 
 var parsedVersions = { 1: null, 2: null, 3: null };
