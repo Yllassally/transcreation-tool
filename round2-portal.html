@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Research Participation Portal 研究參與入口 | 北科大應用英文研究所</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --teal: #1D9E75;
+    --teal-light: #E1F5EE;
+    --teal-dark: #0F6E56;
+    --gray: #5F5E5A;
+    --gray-light: #F1EFE8;
+    --gray-border: #D3D1C7;
+    --text: #2C2C2A;
+    --text-muted: #888780;
+    --bg: #FAFAF8;
+    --white: #ffffff;
+    --radius: 10px;
+    --shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+
+  body {
+    font-family: -apple-system, "Noto Sans TC", "PingFang TC", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* Header */
+  .site-header {
+    background: var(--white);
+    border-bottom: 1px solid var(--gray-border);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .site-logo {
+    width: 38px; height: 38px;
+    background: var(--teal-light);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 600; color: var(--teal-dark);
+    line-height: 1.2; text-align: center; flex-shrink: 0;
+  }
+  .site-title { font-size: 14px; color: var(--text); line-height: 1.4; }
+  .site-title span { display: block; font-size: 12px; color: var(--text-muted); font-weight: 400; }
+
+  /* Progress bar */
+  .progress-bar {
+    background: var(--white);
+    border-bottom: 1px solid var(--gray-border);
+    padding: 0 24px;
+    display: flex;
+    overflow-x: auto;
+    gap: 0;
+  }
+  .progress-bar::-webkit-scrollbar { display: none; }
+  .step-tab {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    background: none;
+    border-top: none; border-left: none; border-right: none;
+    font-family: inherit;
+    transition: color 0.15s, border-color 0.15s;
+    position: relative;
+  }
+  .step-tab:hover { color: var(--text); }
+  .step-tab.active { color: var(--teal-dark); border-bottom-color: var(--teal); }
+  .step-tab.done { color: var(--teal); }
+  .step-num {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--gray-light);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 600;
+    flex-shrink: 0;
+    transition: background 0.15s, color 0.15s;
+  }
+  .step-tab.active .step-num { background: var(--teal); color: white; }
+  .step-tab.done .step-num { background: var(--teal-light); color: var(--teal-dark); }
+  .step-num.check::after { content: "✓"; }
+
+  /* Main content */
+  .main { max-width: 720px; margin: 0 auto; padding: 32px 24px 80px; }
+
+  /* Page panels */
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* Cards */
+  .card {
+    background: var(--white);
+    border: 1px solid var(--gray-border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow);
+  }
+  .card-title {
+    font-size: 17px; font-weight: 600;
+    margin-bottom: 8px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .card-icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    background: var(--teal-light);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .card p { font-size: 14px; color: var(--text-muted); line-height: 1.8; margin-top: 8px; }
+
+  /* Section label */
+  .section-label {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+    color: var(--text-muted); text-transform: uppercase;
+    margin-bottom: 12px; margin-top: 24px;
+  }
+
+  /* Video placeholder */
+  .video-box {
+    background: #000;
+    border: 1px solid var(--gray-border);
+    border-radius: var(--radius);
+    aspect-ratio: 16/9;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 8px; color: var(--text-muted);
+    font-size: 14px; margin-bottom: 16px;
+    overflow: hidden;
+  }
+  .video-box iframe { width: 100%; height: 100%; border: none; border-radius: var(--radius); }
+  .video-box video { width: 100%; height: 100%; border-radius: var(--radius); display: block; }
+  .video-icon { font-size: 40px; opacity: 0.4; }
+
+  /* LINE QR Code section */
+  .line-qr-box {
+    background: var(--white);
+    border: 1px solid var(--gray-border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow);
+  }
+  .line-qr-box img {
+    width: 90px; height: 90px;
+    border-radius: 8px;
+    border: 1px solid var(--gray-border);
+    flex-shrink: 0;
+  }
+  .line-qr-placeholder {
+    width: 90px; height: 90px;
+    border-radius: 8px;
+    border: 2px dashed var(--gray-border);
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; color: var(--text-muted); text-align: center;
+  }
+  .line-qr-info { font-size: 13px; line-height: 1.8; }
+  .line-qr-info strong { display: block; font-size: 14px; margin-bottom: 2px; }
+  .line-qr-info span { color: var(--text-muted); font-size: 12px; }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(5px); }
+  }
+  .btn-locked {
+    background: var(--gray-border) !important;
+    color: var(--text-muted) !important;
+    cursor: not-allowed !important;
+    pointer-events: none;
+  }
+
+  /* Info list */
+  .info-list { list-style: none; }
+  .info-list li {
+    font-size: 14px; line-height: 1.8;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--gray-light);
+    display: flex; gap: 10px; align-items: flex-start;
+  }
+  .info-list li:last-child { border-bottom: none; }
+  .info-list .dot { color: var(--teal); font-size: 16px; margin-top: 1px; flex-shrink: 0; }
+
+  /* Timeline */
+  .timeline { display: flex; flex-direction: column; gap: 0; }
+  .tl-item {
+    display: flex; gap: 16px; padding-bottom: 20px;
+    position: relative;
+  }
+  .tl-item:last-child { padding-bottom: 0; }
+  .tl-left { display: flex; flex-direction: column; align-items: center; width: 36px; flex-shrink: 0; }
+  .tl-dot {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--teal-light);
+    border: 2px solid var(--teal);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 600; color: var(--teal-dark);
+    flex-shrink: 0;
+    z-index: 1;
+  }
+  .tl-line {
+    width: 2px; background: var(--gray-border);
+    flex: 1; margin-top: 4px;
+  }
+  .tl-item:last-child .tl-line { display: none; }
+  .tl-content { padding-top: 4px; }
+  .tl-title { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+  .tl-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+  .tl-badge {
+    display: inline-block;
+    font-size: 11px; padding: 2px 8px;
+    border-radius: 20px; margin-top: 4px;
+    background: var(--teal-light); color: var(--teal-dark);
+    font-weight: 500;
+  }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 12px 24px;
+    border-radius: var(--radius);
+    font-size: 14px; font-weight: 500;
+    cursor: pointer; border: none;
+    font-family: inherit;
+    text-decoration: none;
+    transition: opacity 0.15s, transform 0.1s;
+  }
+  .btn:active { transform: scale(0.98); }
+  .btn-primary {
+    background: var(--teal); color: white;
+    width: 100%;
+  }
+  .btn-primary:hover { opacity: 0.9; }
+  .btn-outline {
+    background: var(--white); color: var(--teal-dark);
+    border: 1px solid var(--teal);
+    width: 100%;
+  }
+  .btn-outline:hover { background: var(--teal-light); }
+  .btn-nav {
+    display: flex; gap: 10px; margin-top: 24px;
+  }
+  .btn-nav .btn { flex: 1; }
+
+  /* Signature canvas */
+  .sig-canvas-wrap {
+    border: 1.5px solid var(--gray-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    position: relative;
+    background: white;
+    margin-bottom: 8px;
+  }
+  #sig-canvas { display: block; cursor: crosshair; touch-action: none; }
+  .sig-hint {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 13px; color: var(--text-muted);
+    pointer-events: none; text-align: center; line-height: 1.8;
+    transition: opacity 0.2s;
+  }
+
+  /* Form fields */
+  .field-group { margin-bottom: 14px; }
+  .field-label { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; display: block; }
+  .field-input {
+    width: 100%; padding: 10px 12px;
+    border: 1px solid var(--gray-border);
+    border-radius: 8px;
+    font-size: 14px; color: var(--text);
+    font-family: inherit;
+    background: white;
+    transition: border-color 0.15s;
+  }
+  .field-input:focus { outline: none; border-color: var(--teal); }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  /* Consent items */
+  .consent-list { list-style: none; }
+  .consent-list li {
+    font-size: 13px; line-height: 1.8; color: var(--text);
+    padding: 6px 0 6px 20px;
+    border-bottom: 1px solid var(--gray-light);
+    position: relative;
+  }
+  .consent-list li:last-child { border-bottom: none; }
+  .consent-list li::before {
+    content: "•"; color: var(--teal);
+    position: absolute; left: 4px;
+  }
+
+  /* Embed form */
+  .form-embed {
+    background: var(--gray-light);
+    border: 1px solid var(--gray-border);
+    border-radius: var(--radius);
+    padding: 32px 24px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-bottom: 16px;
+  }
+  .form-embed a {
+    color: var(--teal-dark);
+    font-weight: 500;
+    text-decoration: underline;
+  }
+  .form-link-box {
+    border: 1px solid var(--gray-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+  .form-link-box iframe { width: 100%; height: 600px; border: none; display: block; }
+
+  /* Tool embed */
+  .tool-frame {
+    border-top: 1px solid var(--gray-border);
+    border-bottom: 1px solid var(--gray-border);
+    overflow: hidden;
+    margin-bottom: 16px;
+    margin-left: calc(-50vw + 50%);
+    margin-right: calc(-50vw + 50%);
+    width: 100vw;
+  }
+  .tool-frame iframe { width: 100%; height: 90vh; border: none; display: block; }
+
+  /* Notice box */
+  .notice {
+    background: var(--teal-light);
+    border: 1px solid #9FE1CB;
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    font-size: 13px;
+    color: var(--teal-dark);
+    line-height: 1.7;
+    margin-bottom: 16px;
+    display: flex; gap: 10px;
+  }
+  .notice-icon { flex-shrink: 0; font-size: 16px; margin-top: 1px; }
+
+  /* Completion screen */
+  .completion {
+    text-align: center; padding: 56px 24px 40px;
+  }
+  .completion-icon { font-size: 72px; margin-bottom: 20px; }
+  .completion h2 { font-size: 26px; margin-bottom: 12px; font-weight: 600; }
+  .completion p { font-size: 15px; color: var(--text-muted); line-height: 2; }
+  .gift-badge {
+    display: inline-block;
+    margin-top: 24px;
+    background: var(--teal-light);
+    color: var(--teal-dark);
+    border: 1px solid #9FE1CB;
+    border-radius: 20px;
+    padding: 10px 28px;
+    font-size: 15px; font-weight: 600;
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-logo">北科<br>大</div>
+  <div class="site-title">
+    Round 2 研究入口
+    <span>Graduate Institute of Applied English, NTUT</span>
+  </div>
+</header>
+
+<nav class="progress-bar" id="progress-bar">
+  <button class="step-tab active" onclick="goTo(0)">
+    <span class="step-num">1</span> Overview 說明
+  </button>
+  <button class="step-tab" onclick="goTo(1)">
+    <span class="step-num">2</span> Tool 工具
+  </button>
+  <button class="step-tab" onclick="goTo(2)">
+    <span class="step-num">3</span> Round 2 Survey 問卷
+  </button>
+  <button class="step-tab" onclick="goTo(3)">
+    <span class="step-num">4</span> Done 完成
+  </button>
+</nav>
+
+<main class="main">
+
+  <!-- PANEL 0: Overview -->
+  <div class="panel active" id="panel-0">
+    <div style="text-align:center;margin-bottom:16px;">
+      <span style="font-size:20px;font-weight:700;color:#D0021B;display:inline-block;">
+        ⚠️ Please use a computer or laptop for the best experience.<br>
+        <small style="font-size:14px;font-weight:400;">建議使用電腦或筆記型電腦進行，以確保最佳顯示效果。</small>
+      </span>
+    </div>
+
+    <h2 style="margin-bottom:8px;">Welcome Back — Round 2! 歡迎回來，第二輪測試！</h2>
+    <p>Thank you for completing Round 1. The tool has been updated based on your feedback, and we'd love to know if the experience has improved.<br>
+    <small>感謝您完成第一輪測試！我們已根據您的回饋更新了工具，希望了解您的使用體驗是否有所改善。</small></p>
+
+    <div style="background:var(--bg2,#f5f5f5);border-radius:10px;padding:16px 20px;margin:20px 0;">
+      <strong>What you'll do in Round 2 / 第二輪流程：</strong>
+      <ol style="margin:10px 0 0 16px;line-height:2;">
+        <li>Use the updated AdWhiz tool to generate English copy for your product again<br><small>使用更新版工具再次為您的產品生成英文廣告文案</small></li>
+        <li>Export the session record (.txt file)<br><small>匯出操作記錄（.txt 檔）</small></li>
+        <li>Complete the Round 2 questionnaire and upload the .txt file<br><small>填寫第二輪問卷並上傳 .txt 檔</small></li>
+      </ol>
+    </div>
+
+    <p>The whole process takes about <strong>15–20 minutes</strong>.<br>
+    <small>整個流程約需 15–20 分鐘。</small></p>
+
+    <div style="text-align:center;margin-top:24px;">
+      <button class="btn-primary" onclick="goTo(1)">Let's start → 開始 →</button>
+    </div>
+  </div>
+
+  <!-- PANEL 1: Tool -->
+  <div class="panel" id="panel-1">
+    <h2>Use the Updated AdWhiz Tool 使用更新版工具</h2>
+    <p>Please use the same product you used in Round 1. Fill in the fields as before — you may notice some fields have been updated based on Round 1 feedback.<br>
+    <small>請使用與第一輪相同的產品資訊填寫。您可能會注意到部分欄位已根據第一輪回饋更新。</small></p>
+
+    <div style="background:var(--bg2,#f5f5f5);border-radius:10px;padding:14px 18px;margin:16px 0 20px;">
+      <strong>When you finish, remember to: / 完成後請記得：</strong>
+      <ol style="margin:8px 0 0 16px;line-height:2;">
+        <li>Select your preferred version and write your reason<br><small>選擇偏好的版本並填寫選擇理由</small></li>
+        <li>Click <strong>Export</strong> to download the .txt session record<br><small>點擊「Export」下載 .txt 操作記錄</small></li>
+        <li>Come back to this page and proceed to Step 3<br><small>回到這個頁面，繼續進行第三步</small></li>
+      </ol>
+    </div>
+
+    <div style="border-radius:12px;overflow:hidden;border:1px solid #ddd;margin-bottom:20px;">
+      <iframe src="https://yllassally.github.io/transcreation-tool/index-v2.html" width="100%" height="700" frameborder="0" style="display:block;"></iframe>
+    </div>
+
+    <div style="text-align:center;margin-top:8px;">
+      <button class="btn-primary" onclick="goTo(2)">I've exported the file → 我已匯出檔案 →</button>
+    </div>
+  </div>
+
+  <!-- PANEL 2: Round 2 Questionnaire -->
+  <div class="panel" id="panel-2">
+    <h2>Round 2 Questionnaire 第二輪問卷</h2>
+    <p>Please complete the questionnaire below and upload the .txt file you just exported from the tool.<br>
+    <small>請填寫以下問卷，並上傳您剛才從工具匯出的 .txt 檔案。</small></p>
+
+    <p style="background:var(--bg2,#f5f5f5);border-radius:8px;padding:12px 16px;font-size:14px;">
+      The questionnaire will open in a new window. Please upload the .txt file there.<br>
+      <small>問卷將在新視窗開啟，請在問卷中上傳 .txt 檔案。</small>
+    </p>
+
+    <div style="text-align:center;margin:28px 0 16px;">
+      <a href="https://forms.gle/hWhyARMJSZx1N9AK7" target="_blank">
+        <button class="btn-primary" style="font-size:16px;padding:14px 36px;">
+          Open Round 2 Questionnaire 開啟第二輪問卷 →
+        </button>
+      </a>
+    </div>
+
+    <p style="text-align:center;font-size:13px;color:#888;">After submitting the questionnaire, come back here and click Continue.<br>
+    <small>提交問卷後，請回到此頁面點擊「繼續」。</small></p>
+
+    <div style="text-align:center;margin-top:20px;">
+      <button class="btn-primary" onclick="goTo(3)">I've submitted the questionnaire → 我已提交問卷 →</button>
+    </div>
+  </div>
+
+  <!-- PANEL 3: Done -->
+  <div class="panel" id="panel-3">
+    <div style="text-align:center;padding:40px 20px;">
+      <div style="font-size:56px;margin-bottom:16px;">🎉</div>
+      <h2 style="margin-bottom:12px;">All Done — Thank You! 全部完成，非常感謝！</h2>
+      <p>You've completed both rounds of testing. Your feedback is invaluable to this research.<br>
+      <small>您已完成兩輪測試，您的回饋對本研究非常重要。</small></p>
+      <p style="margin-top:16px;">The researcher will be in touch shortly regarding your participation gift (NT$300 e-voucher).<br>
+      <small>研究者將盡快與您聯繫，安排參與謝禮（NT$300 電子禮券）。</small></p>
+      <p style="margin-top:24px;font-size:13px;color:#888;">Questions? Contact Sally at <a href="mailto:revivalsally@gmail.com">revivalsally@gmail.com</a></p>
+    </div>
+  </div>
+
+</main>
+
+<script>
+var currentPanel = 0;
+var totalPanels = 4;
+
+function goTo(n) {
+  document.getElementById('panel-' + currentPanel).classList.remove('active');
+  document.querySelectorAll('.step-tab')[currentPanel].classList.remove('active');
+  currentPanel = n;
+  document.getElementById('panel-' + currentPanel).classList.add('active');
+  document.querySelectorAll('.step-tab')[currentPanel].classList.add('active');
+  window.scrollTo(0, 0);
+}
+</script>
+
+</body>
+</html>
